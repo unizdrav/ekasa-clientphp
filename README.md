@@ -55,6 +55,13 @@ Pre spustenie konkrétneho testu je nutné uviesť prepínač `--filter` s názv
 
 # Inštalácia
 
+## Packagist
+Knižnica je dostupná na https://packagist.org/packages/ninedigit/ekasa-clientphp.
+
+Balík nainštalujete príkazom `composer require ninedigit/ekasa-clientphp`.
+Pre inštaláciu špecifickej verzie bude príkaz vyzerať nasledovne `composer require ninedigit/ekasa-clientphp:0.0.1`.
+
+## GitHub
 Upravte súbor `composer.json` a pridajte nový repozitár:
 
 ```
