@@ -21,6 +21,13 @@ final class ApiClientOptions
      */
     public ?string $proxyUrl;
 
+    /* Indikuje aktívnosť vývojárského režímu, v ktorom
+     * je napr. možné vidieť záznamy vykonaných HTTP požiadaviek.
+     *
+     * Viďte https://docs.guzzlephp.org/en/stable/request-options.html#debug
+     */
+    public bool $debug = false;
+
     /**
      * Nastavenie autentifikácie
      * @var ApiClientAuthenticationOptions|null
@@ -35,12 +42,14 @@ final class ApiClientOptions
     public function __construct(
         ?string                         $url = EKasaEnvironment::LOCALHOST,
         ?ApiClientAuthenticationOptions $authentication = null,
-        ?string                         $proxyUrl = null
+        ?string                         $proxyUrl = null,
+        ?bool                           $debug = false
     )
     {
         $this->url = $url;
         $this->authentication = $authentication;
         $this->proxyUrl = $proxyUrl;
+        $this->debug = $debug;
     }
 
     /**
@@ -104,6 +113,8 @@ final class ApiClientOptions
             $authentication->accessToken = $accessToken;
         }
 
-        return new ApiClientOptions($url, $authentication, $proxyUrl);
+        $debug = $data["debug"] ?? false;
+
+        return new ApiClientOptions($url, $authentication, $proxyUrl, boolval($debug));
     }
 }

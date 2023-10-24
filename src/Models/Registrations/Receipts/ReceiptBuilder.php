@@ -42,9 +42,9 @@ class ReceiptBuilder
         $builder = new CashRegisterReceiptWithItemsAndRoundingAmountBuilder();
 
         $builder
+            ->setItems($items)
             ->setReceiptType(ReceiptType::CASH_REGISTER)
-            ->setCashRegisterCode($cashRegisterCode)
-            ->setItems($items);
+            ->setCashRegisterCode($cashRegisterCode);
 
         $builder->receipt->headerText = null;
         $builder->receipt->footerText = null;
@@ -58,9 +58,9 @@ class ReceiptBuilder
         $builder = new CashRegisterReceiptWithItemsAndRoundingAmountBuilder();
 
         $builder
+            ->setItems($items)
             ->setReceiptType(ReceiptType::INVALID)
-            ->setCashRegisterCode($cashRegisterCode)
-            ->setItems($items);
+            ->setCashRegisterCode($cashRegisterCode);
 
         $builder->receipt->headerText = null;
         $builder->receipt->footerText = null;
@@ -74,9 +74,9 @@ class ReceiptBuilder
         $builder = new CashRegisterReceiptWithItemsAndRoundingAmountBuilder();
 
         $builder
+            ->setItems($items)
             ->setReceiptType(ReceiptType::PARAGON)
-            ->setCashRegisterCode($cashRegisterCode)
-            ->setItems($items);
+            ->setCashRegisterCode($cashRegisterCode);
 
         $builder->receipt->issueDate = $issueDate;
         $builder->receipt->paragonNumber = $paragonNumber;

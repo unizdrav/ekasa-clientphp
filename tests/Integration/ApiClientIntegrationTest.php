@@ -23,7 +23,7 @@ function getGUID(): string {
         $uuid = com_create_guid();
     }
     else {
-        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+        mt_srand(intval((double)microtime()*10000));//optional for php 4.2.0 and up.
         $charid = strtoupper(md5(uniqid(rand(), true)));
         $hyphen = chr(45);// "-"
         $uuid = chr(123)// "{"
@@ -62,11 +62,11 @@ final class ApiClientIntegrationTest extends TestCase {
         $print = new PosRegisterReceiptPrintContextDto($printOptions);
 
         $receipt = ReceiptBuilder::cashRegister($cashRegisterCode, $items)
-            ->setHeaderText("Nine Digit, s.r.o.")
-            ->setFooterText("Ďakujeme za nákup!")
             ->setRoundingAmount(0.02)
             ->addPayment(new ReceiptPaymentDto(4.00, ReceiptPaymentName::CASH))
             ->addPayment(new ReceiptPaymentDto(-0.50, "Výdavok"))
+            ->setHeaderText("Nine Digit, s.r.o.")
+            ->setFooterText("Ďakujeme za nákup!")
             ->build();
 
         $request = new RegisterReceiptRequestDto($receipt, $externalId);
@@ -79,6 +79,8 @@ final class ApiClientIntegrationTest extends TestCase {
         }
         catch (Exception | Error $e)
         {
+            print_r($e->getMessage());
+            print_r($e->getTraceAsString());
             $throws = true;
         }
 

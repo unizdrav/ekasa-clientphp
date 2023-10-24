@@ -23,10 +23,13 @@ final class HttpClient implements HttpClientInterface
     private array $defaultQueryString;
     private GuzzleHttpClient $client;
     private string $url;
+    private bool $debug;
 
     public function __construct(ApiClientOptions $options)
     {
         $this->url = $options->url;
+        $this->debug = $options->debug;
+
         $this->defaultHttpHeaders = array();
         $this->defaultQueryString = array();
         $this->serializer = $options->serializer ?? new SymfonyJsonSerializer();
@@ -105,7 +108,7 @@ final class HttpClient implements HttpClientInterface
         if (count($queryString) > 0) {
             $url .= "?" . htmlspecialchars(http_build_query($queryString, "", "&", PHP_QUERY_RFC3986));
         }
-
+        
         return new ApiRequestMessage($request->method, $url, $headers, $body);
     }
 
@@ -122,8 +125,7 @@ final class HttpClient implements HttpClientInterface
                 $request->url,
                 $request->headers,
                 $request->body);
-
-            $guzzleResponse = $this->client->send($guzzleRequest, ["debug" => true]);
+            $guzzleResponse = $this->client->send($guzzleRequest, ["debug" => $this->debug]);
             $body = $guzzleResponse->getBody();
         } catch (RequestException $ex) {
             if ($ex->hasResponse()) {
