@@ -5,6 +5,82 @@ HTTP klient v jazyku PHP pre [e-Kasa API riešenie](https://ekasa.ninedigit.sk) 
 
 Knižnica je kompatibilná s PHP verzie 7.4 a vyššie.
 
+# Migrácia z `ekasa-cloud-clientphp`
+Registrácia dokladov s využitím e-Kasa Cloud riešenia za využitia knižnice [ekasa-cloud-clientphp](https://github.com/ninedigit/ekasa-cloud-clientphp) bola nahradená rozšírením Expose, ktoré je integrované priamo v eKasa API.
+
+Služba Expose umožňuje bezpečne zverejniť eKasa API službu na internete prostredníctvom HTTPS protokolu. Tá bude dostupná online prostredníctvom zabepečeného šifrovaného spojenia s ochranou pred neoprávneným prístupom.
+
+Túto knižnicu je možné využiť v dvoch režimoch:
+ - priame pripojenie na API v lokálnej sieti
+ - pripojenie na API cez Expose server
+
+V oboch prípadoch sa vstupné a výstupné dáta nelíšia, preto je prechod na Expose možný bez úpravy integrácie. Expose teda predstavuje iba transportnú vrstvu medzi integráciou a samotným eKasa API.
+
+## Zmena procesu registrácie dokladu
+
+Registrácia dokladu v eKasa Cloud prebiehala interne v niekoľkých krokoch od vytvorenia požiadavky až po jej vybavenie v dopredu určenom čase. Po novom je počas výkonu HTTP požiadavky vyvolaná registrácia dokladu, pričom výsledkom je buď úspešné spracovanie alebo chyba. Odpadá teda nutnosť vyhodnocovania stavu požiadavky registrácie.
+
+## Zmeny menných priestorov
+
+| Pôvodný názov  | Nový názov     |
+| -------------- | -------------- |
+| `NineDigit\eKasa\Cloud\Client` | `NineDigit\eKasa\Client` |
+| `NineDigit\eKasa\Cloud\Client\Models` | `NineDigit\eKasa\Client\Models\` |
+| `NineDigit\eKasa\Cloud\Client\Models\Registrations\Receipts` | `NineDigit\eKasa\Client\Models\Registrations\Receipts` |
+
+## Zmeny názvov tried
+
+| Pôvodný názov  | Nový názov     |
+| -------------- | -------------- |
+| `PosReceiptPrinterDto` | `PosRegisterReceiptPrintContextDto` |
+| `PdfReceiptPrinterDto` | `PdfRegisterReceiptPrintContextDto` |
+| `EmailReceiptPrinterDto` | `EmailRegisterReceiptPrintContextDto` |
+| `ReceiptRegistrationItemDto` | `ReceiptItemDto` |
+| `ReceiptRegistrationPaymentDto` | `ReceiptPaymentDto` |
+| `CreateReceiptRegistrationRequestDto` | `RegisterReceiptRequestDto` |
+| `CreateReceiptRegistrationDto` | `RegisterReceiptRequestContextDto` |
+| `ReceiptRegistrationDto` | `RegisterReceiptResultDto` |
+
+## Zhrnutie zmien v procese registrácie dokladu
+
+Obe knižnice obsahujú v priečinku `examples` vzorové príklady registrácie a pomôžu tak pri migrácií vášho existujúceho kódu.
+
+1. Nastavenia klienta triedou `ApiClientOptions` majú zmenené parametre. Tu je možné určiť spôsob pripojenia k eKasa API a to buď lokálne (`EKasaEnvironment::LOCALHOST`) alebo prostredníctvom Expose služby (`EKasaEnvironment::exposePlayground(...)` resp. `EKasaEnvironment::exposeProduction(...)`).
+2. Práca s tlačiarňami sa nezmenila, ich prislúchajúce triedy majú však zmenené názvy. Viďte tabuľu vyššie.
+3. Trieda položky dokladu má zmenený názov, no jej štruktúra je identická. Pribudla trieda `ReceiptItemBuilder` na pohodlnejšiu tvorbu položiek dokladu.
+4. Trieda dokladu má taktiež zmenený názov. Štruktúra je do veľkej miery identická. Vlastnosť `externalId` sa však nastavuje v triede, ktorá zaobaľuje triedu dokladu s externým identifikátorom - `RegisterReceiptRequestDto`. Na vytvorenie objektu dokladu je možné využiť `ReceiptBuilder`.
+5. Vytvorený doklad je nutné zabaliť do triedy `RegisterReceiptRequestDto`, kde je možné uviesť externý identifikátor.
+6. Požiadavka zaregistrovania dokladu bola premenovaná z `CreateReceiptRegistrationDto` na `RegisterReceiptRequestContextDto` a obsahuje kontext tlačových informácií (viďte bod 1.) a kontextu dokladu (viďte bod 5.). Vypadol teda parameter maximálnej platnosti požiadavky registrácie dokladu (viac informácií je v sekcií [Zmena procesu registrácie dokladu](#zmena-procesu-registrácie-dokladu)).
+7. Odoslanie požiadavky registrácie dokladu je rovnakou metódou `registerReceipt`. Tá však skončí buď výsledkom `RegisterReceiptResultDto` (pôvodne `ReceiptRegistrationDto`) prípadne chybou `ValidationProblemDetailsException` resp. `ProblemDetailsException`.
+Výsledok registrácie je možné pozorovať vo vlastnosti `isSuccessful`, ktorá nadobúda tri stavy:
+ - `true`: Doklad bol úspešne spracovaný v režíme ON-LINE
+ - `null`: Doklad bol úspešne spracovaný v režíme OFF-LINE
+ - `false`: Spracovanie dokladu zlyhalo. Chyba je uvedená vo vlastnosti `error`.
+
+Zmeny vo výsledku odpovede registrácie dokladu:
+| Pôvodná vlastnosť  | Nová vlastnosť     |
+| ------------------ | ------------------ |
+| `request->receiptType` | `request->data->receiptType` |
+| `request->orpCreateDate` | `request->data->createDate` |
+| `request->requestId` | `request->id` |
+| `request->requestDate` | `request->date` |
+| `request->orpProcessDate` | `response->processDate` |
+| `request->receiptId` | `response->data->id` |
+| `request->eKasaError`| `error` |
+| `printer` | *Odstránená* |
+| `creationDate` | *Odstránená* |
+| `createdBy` | *Odstránená* |
+| `notificationDate` | *Odstránená* |
+| `validityTimeSpan` | *Odstránená* |
+| `acceptationDate` | *Odstránená* |
+| `completionTimeSpan` | *Odstránená* |
+| `completionDate` | *Odstránená* |
+| `state` | *Odstránená* |
+| `rejectionReason` | *Odstránená* |
+| `error` | *Odstránená (viďte `request->eKasaError`)* |
+| `id` | *Odstránená* |
+| Ostatné vlastnosti v `request->*` | `request->data->*` |
+
 # Vývoj
 
 ## Inštalácia Composer-a
