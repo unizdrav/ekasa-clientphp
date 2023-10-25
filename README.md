@@ -18,7 +18,7 @@ V oboch prípadoch sa vstupné a výstupné dáta nelíšia, preto je prechod na
 
 ## Zmena procesu registrácie dokladu
 
-Registrácia dokladu v eKasa Cloud prebiehala interne v niekoľkých krokoch od vytvorenia požiadavky až po jej vybavenie v dopredu určenom čase. Po novom je počas výkonu HTTP požiadavky vyvolaná registrácia dokladu, pričom výsledkom je buď úspešné spracovanie alebo chyba. Odpadá teda nutnosť vyhodnocovania stavu požiadavky registrácie.
+Registrácia dokladu v eKasa Cloud prebiehala interne v niekoľkých krokoch, ktoré boli definované [stavmi](https://github.com/ninedigit/ekasa-cloud/wiki/receipt-registration) od vytvorenia požiadavky až po jej vybavenie v určenom čase, ktorý bol špecifikovaný v požiadavke (vlastnosť `validityTimeSpan`). Po novom je počas výkonu HTTP požiadavky vyvolaná registrácia dokladu, pričom výsledkom je finálny stav spracovania alebo chyba. Odpadá teda nutnosť vyhodnocovania jednotlivých stavov požiadavky registrácie.
 
 ## Zmeny menných priestorov
 
