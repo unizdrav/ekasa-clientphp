@@ -58,18 +58,20 @@ composer require ninedigit/ekasa-clientphp:0.0.1
 
 Knižnicu je možné používať v dvoch režimoch:
 
-## Priamym spojením s eKasa API
+## Cez lokálnu sieť
 
-Po inštalácii Portos eKasa API na počítači je v rámci localhostu, štandardne na porte 3010 (`http://localhost:3010`), dostupná API služba.
+Služba je po inštalácií štandardne dostupná na porte `3010` (`http://localhost:3010`).
 
-V takom prípade inštanciujete klientskú triedu nasledovne:
+Klientskú triedu inštanciujte nasledovne:
 
 ```php
 $clientOptions = new ApiClientOptions(EKasaEnvironment::LOCALHOST);
 $client = new ApiClient($clientOptions);
 ```
 
-## Cloudovým spojením cez službu Expose 
+> TIP: Ak ste integrátor a potrebujete testovaciu eKasa API inštanciu, postupujte podľa [tohto návodu](INTEGRATOR.md).
+
+## Cez internet so službou Expose 
 
 Ak je vaša PHP aplikácia používajúca túto knižnicu nasadená na inom počítači (na serveri resp. v cloude), je potrebné zabezpečiť sieťové spojenie s lokálne nainštalovanou eKasa API.
 
