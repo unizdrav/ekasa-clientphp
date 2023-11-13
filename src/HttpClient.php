@@ -13,10 +13,11 @@ use NineDigit\eKasa\Client\Serialization\SerializerInterface;
 use NineDigit\eKasa\Client\Exceptions\ValidationProblemDetailsException;
 
 use NineDigit\eKasa\Client\Models\ProblemDetails;
+use NineDigit\eKasa\Client\Models\StatusCodeProblemDetails;
 use NineDigit\eKasa\Client\Models\ValidationProblemDetails;
 use NineDigit\eKasa\Client\Serialization\SymfonyJsonSerializer;
 
-final class HttpClient implements HttpClientInterface
+class HttpClient implements HttpClientInterface
 {
     private SerializerInterface $serializer;
     private array $defaultHttpHeaders;
@@ -162,7 +163,7 @@ final class HttpClient implements HttpClientInterface
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
      */
-    private function throwOnError(ApiResponseMessage $response): void
+    protected function throwOnError(ApiResponseMessage $response): void
     {
         if ($response->isSuccessStatusCode()) {
             return;
@@ -172,7 +173,9 @@ final class HttpClient implements HttpClientInterface
             $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
             throw new ValidationProblemDetailsException($validationProblemDetails);
         } else {
-            $problemDetails = $this->serializer->deserialize($response->body, ProblemDetails::class);
+            $problemDetails = !empty($response->body) ?
+                $this->serializer->deserialize($response->body, ProblemDetails::class) :
+                new StatusCodeProblemDetails($response->statusCode);
             throw new Exceptions\ProblemDetailsException($problemDetails);
         }
     }

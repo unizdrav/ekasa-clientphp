@@ -12,6 +12,9 @@ final class ApiResponseMessage
 
     public function __construct(int $statusCode = 204, array $headers = array(), ?string $body = null)
     {
+        $this->statusCode = $statusCode;
+        $this->headers = $headers;
+        $this->body = $body;
     }
 
     public function isSuccessStatusCode(): bool
