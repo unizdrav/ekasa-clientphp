@@ -18,7 +18,7 @@ final class EKasaEnvironment
      */
     public static function exposePlayground(string $subdomain): string
     {
-        return "https://$subdomain.expose.ninedigit.sk";
+        return "https://$subdomain.expose-int.ninedigit.sk";
     }
 
     /**
@@ -30,6 +30,6 @@ final class EKasaEnvironment
      */
     public static function exposeProduction(string $subdomain): string
     {
-        return "https://$subdomain.expose-int.ninedigit.sk";
+        return "https://$subdomain.expose.ninedigit.sk";
     }
 }
