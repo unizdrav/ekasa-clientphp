@@ -10,7 +10,7 @@ final class ApiClientOptions
 {
     /**
      * Url adresa e-Kasa API servera
-     * @example "http://localhost:3010"
+     * @example "http://localhost:3010/api"
      * @see EKasaEnvironment
      */
     public string $url;

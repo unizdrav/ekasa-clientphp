@@ -7,6 +7,7 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Header;
 
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
 use NineDigit\eKasa\Client\Serialization\SerializerInterface;
@@ -137,8 +138,8 @@ class HttpClient implements HttpClientInterface
             }
         }
 
-        foreach ($guzzleResponse->getHeaders() as $key => $value)
-            $headers[$key] = $value;
+        foreach ($guzzleResponse->getHeaders() as $key => $values)
+            $headers[$key] = implode(', ', $values);
 
         $response = new ApiResponseMessage();
         $response->statusCode = $guzzleResponse->getStatusCode();
@@ -169,14 +170,23 @@ class HttpClient implements HttpClientInterface
             return;
         }
 
-        if ($response->statusCode === 400 || $response->statusCode === 422) {
-            $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
-            throw new ValidationProblemDetailsException($validationProblemDetails);
-        } else {
-            $problemDetails = !empty($response->body) ?
-                $this->serializer->deserialize($response->body, ProblemDetails::class) :
-                new StatusCodeProblemDetails($response->statusCode);
-            throw new Exceptions\ProblemDetailsException($problemDetails);
+        $contentType = Header::parse($response->headers["Content-Type"] ?? '')[0][0] ?? '';
+        $isJsonContentType = $contentType === "application/json" || $contentType === "application/problem+json";
+
+        if ($isJsonContentType) {
+            if ($response->statusCode === 400 || $response->statusCode === 422) {
+                $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
+                throw new ValidationProblemDetailsException($validationProblemDetails);
+            } else {
+                $problemDetails = $this->serializer->deserialize($response->body, ProblemDetails::class);
+            }
+        } /*else if ($response->statusCode === 404 && $contentType === "text/html") {
+            throw new TunnelNotFoundException();
+        }*/
+        else {
+            $problemDetails = new StatusCodeProblemDetails($response->statusCode);
         }
+        
+        throw new Exceptions\ProblemDetailsException($problemDetails);
     }
 }

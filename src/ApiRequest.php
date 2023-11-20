@@ -12,7 +12,7 @@ final class ApiRequest {
   public function __construct(string $method, string $path, array $queryString = array(), array $headers = array(), ?object $payload = null) {
     $this->method = $method;
     $this->path = $path;
-      $this->queryString = $queryString;
+    $this->queryString = $queryString;
     $this->headers = $headers;
     $this->payload = $payload;
   }
