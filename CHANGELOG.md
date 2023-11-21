@@ -25,3 +25,9 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 
 ## [0.0.5] - 2023-11-20
  - Vylepšené vyhodnocovanie odopovede zo servera.
+
+## [0.0.6] - 2023-11-21
+ - Vylepšené vyhodnocovanie odopovede zo servera.
+ - Vytvorená nová trieda výnimky `ExposeException` pre chyby *Expose* služby.
+ - Vytvorená nová trieda výnimky `ResponseException`. Tá je základným typom pre triedy `ApiException` (výnimka pre chyby *eKasa API* služby) a `ExposeException`.
+ - Vytvorená nová trieda `ExposeError`. Tá obsahuje identifikátor chyby *Expose* služby.

@@ -8,11 +8,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Header;
-
+use NineDigit\eKasa\Client\ExposeErrorCode;
+use NineDigit\eKasa\Client\Exceptions\ExposeException;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
 use NineDigit\eKasa\Client\Serialization\SerializerInterface;
 use NineDigit\eKasa\Client\Exceptions\ValidationProblemDetailsException;
-
+use NineDigit\eKasa\Client\Models\ExposeError;
 use NineDigit\eKasa\Client\Models\ProblemDetails;
 use NineDigit\eKasa\Client\Models\StatusCodeProblemDetails;
 use NineDigit\eKasa\Client\Models\ValidationProblemDetails;
@@ -68,6 +69,7 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
+     * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
      */
@@ -79,7 +81,9 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
+     * @throws ExposeException
      * @throws ProblemDetailsException
+     * @throws ValidationProblemDetailsExceptions
      */
     public function receive(ApiRequest $request, $type)
     {
@@ -150,6 +154,7 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
+     * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
      */
@@ -161,6 +166,7 @@ class HttpClient implements HttpClientInterface
 
     /**
      * @throws Exception
+     * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
      */
@@ -171,19 +177,30 @@ class HttpClient implements HttpClientInterface
         }
 
         $contentType = Header::parse($response->headers["Content-Type"] ?? '')[0][0] ?? '';
+        $isBeyondCodeExposeResponse = boolval($response->headers["BeyondCode-Expose-Response"] ?? false);
         $isJsonContentType = $contentType === "application/json" || $contentType === "application/problem+json";
 
         if ($isJsonContentType) {
-            if ($response->statusCode === 400 || $response->statusCode === 422) {
-                $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
-                throw new ValidationProblemDetailsException($validationProblemDetails);
-            } else {
+            if (!$isBeyondCodeExposeResponse) {
+                if ($response->statusCode === 400 || $response->statusCode === 422) {
+                    $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
+                    throw new ValidationProblemDetailsException($validationProblemDetails);
+                }
                 $problemDetails = $this->serializer->deserialize($response->body, ProblemDetails::class);
+            } else {
+                $exposeError = $this->serializer->deserialize($response->body, ExposeError::class);
+                $errorMessage = $exposeError->error;
+
+                switch ($exposeError->errorCode)
+                {
+                    case ExposeErrorCode::TUNNEL_NOT_FOUND:
+                        $errorMessage = "Tunel nebol vytvorený. Cieľový počítač je vypnutý alebo nesprávne nakonfigurovaný.";
+                        break;
+                }
+
+                throw new ExposeException($response->statusCode, $errorMessage, $exposeError->errorCode);
             }
-        } /*else if ($response->statusCode === 404 && $contentType === "text/html") {
-            throw new TunnelNotFoundException();
-        }*/
-        else {
+        } else {
             $problemDetails = new StatusCodeProblemDetails($response->statusCode);
         }
         

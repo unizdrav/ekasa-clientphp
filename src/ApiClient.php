@@ -34,6 +34,7 @@ final class ApiClient {
    * Zadá požiadavku na zaregistrovanie dokladu.
    * @throws ValidationProblemDetailsException ak nie je požiadavka valídna
    * @throws ProblemDetailsException
+   * @throws ExposeException
    */
   public function registerReceipt(RegisterReceiptRequestContextDto $context): RegisterReceiptResultDto {
     $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts")
