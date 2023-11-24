@@ -56,6 +56,8 @@ composer require ninedigit/ekasa-clientphp:0.0.1
 
 # Použitie
 
+> Knižnica aktuálne pokrýva iba funkcionalitu registrácie dokladu. Ak máte záujem o rozšírenie, zadajte prosím dopyt na [info@ninedigit.sk](mailto:info@ninedigit.sk).
+
 Knižnicu je možné používať v dvoch režimoch:
 
 ## Cez lokálnu sieť
