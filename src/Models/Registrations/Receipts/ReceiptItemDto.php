@@ -10,12 +10,14 @@ final class ReceiptItemDto {
      * Typ položky dokladu
      * @see ReceiptItemType
      * @example Positive
+     * @var string
      */
     public string $type;
     /**
      * Označenie tovaru alebo služby.
      * Neprázdny textový reťazec s maximálnou dĺžkou 255 znakov.
      * @example Coca cola
+     * @var string
      */
     public string $name;
     /**
@@ -23,6 +25,7 @@ final class ReceiptItemDto {
      * Číslo v rozsahu -10000000 až 10000000 s presnosťou na dve desatinné miesta.
      * Celková cena musí byť zhodná s výsledkom vynásobenia jednotkovej ceny a množstva.
      * @example 30.00
+     * @var float
      */
     public float $price;
     /**
@@ -31,16 +34,19 @@ final class ReceiptItemDto {
      * Položka typu Positive musí mať kladnú hodnotu. Položka typu ReturnedContainer,
      * Returned, Discount, Advance, Voucher musí mať zápornú hodnotu.
      * @example 15.00
+     * @var float
      */
     public float $unitPrice;
     /**
      * Množstvo tovaru alebo rozsah služby
+     * @var QuantityDto
      */
     public QuantityDto $quantity;
     /**
      * Sadzba dane z pridanej hodnoty.
      * Sadzba nadobúda hodnoty 20.00, 10.00 alebo 0.00.
      * @example 20.00
+     * @var float
      */
     public float $vatRate;
     /**
@@ -54,6 +60,7 @@ final class ReceiptItemDto {
      * vyhotoveného ERP ako referenčné číslo dokladu je uvedené poradové číslo
      * pokladničného dokladu.
      * @example O-7DBCDA8A56EE426DBCDA8A56EE426D1A
+     * @var string|null
      */
     public ?string $referenceReceiptId;
     /**
@@ -62,6 +69,7 @@ final class ReceiptItemDto {
      * Platná hodnota dôvodu priradenia nulovej dane alebo null.
      * Hodnota môže byť uvedená iba pre položky s nulovou sadzbou dane.
      * @example Artwork
+     * @var string|null
      */
     public ?string $specialRegulation;
     /**
@@ -69,15 +77,18 @@ final class ReceiptItemDto {
      * Textový reťazec s dĺžkou 1 až 50 v prípade, že typ položky je Voucher,
      * null v opačnom prípade.
      * @example 201801001
+     * @var string|null
      */
     public ?string $voucherNumber;
     /**
      * Predávajúci, v ktorého mene bol predaný tovar alebo poskytnutá služba
      * Predávajúci alebo null, ak nebol uvedený
+     * @var SellerDto|null
      */
     public ?SellerDto $seller;
     /**
      * Nepovinný dodatočný popis položky dokladu, vyobrazený na doklade.
+     * @var string|null
      */
     public ?string $description;
 

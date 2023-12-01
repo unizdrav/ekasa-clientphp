@@ -88,9 +88,9 @@ Pre aktiváciu služby a získanie prihlasovacích údajov nás kontaktujte na e
 Pri použití Expose služby inštanciujete klientskú triedu nasledovne:
 
 ```php
-$url = EKasaEnvironment::exposeProduction("my_expose_identifier");
-$accessTokenSource = AccessTokenSource::queryString("my_access_token");
-$accessTokenOptions = new ApiClientAuthenticationAccessTokenOptions("31d6cfe0d16ae931b73c59d7", $accessTokenSource);
+$url = EKasaEnvironment::exposeProduction("{vas_nazov_domeny}");
+$accessTokenSource = AccessTokenSource::queryString("access_token");
+$accessTokenOptions = new ApiClientAuthenticationAccessTokenOptions("{vas_bezpecnostny_kluc}", $accessTokenSource);
 $authentication = new ApiClientAuthenticationOptions(null, $accessTokenOptions);
 $clientOptions = new ApiClientOptions($url, $authentication);
 $client = new ApiClient($clientOptions);

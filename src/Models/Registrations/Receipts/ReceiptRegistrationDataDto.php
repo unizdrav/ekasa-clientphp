@@ -10,10 +10,12 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      * Typ pokladničného dokladu.
      * @see ReceiptType
      * @example CashRegister
+     * @var string
      */
     public string $receiptType;
     /**
      * Celková suma v EUR
+     * @var float
      */
     public float $amount;
     /**
@@ -29,6 +31,7 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      * sa takto až výsledná cena platená v hotovosti. Cena platená v hotovosti vo výške 1 eurocent
      * alebo 2 eurocenty sa zaokrúhľuje na 5 eurocentov.
      * @example 0.04
+     * @var float
      */
     public float $roundingAmount;
     /**
@@ -36,16 +39,19 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      * V prípade paragónu je to dátum a čas vyhotovenia paragónu.
      * Vo väčšine prípadov je tento dátum rovnaký ako dátum vytvorenia
      * dokladu v ORP.
+     * @var DateTime|null
      */
     public ?DateTime $issueDate;
     /**
      * Poradové číslo dokladu.
      * Pri požiadavke aj odpovedi k registrácií dokladu nadobúda rovnakú
      * hodnotu.
+     * @var int|null
      */
     public ?int $receiptNumber;
     /**
      * Poradové číslo faktúry, ak ide o úhradu faktúry alebo jej časti.
+     * @var string|null
      */
     public ?string $invoiceNumber;
     /**
@@ -55,29 +61,35 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
     /**
      * Identifikačné číslo pre daň z pridanej hodnoty, ak podnikateľ
      * je platiteľom dane z pridanej hodnoty.
+     * @var string|null
      */
     public ?string $icdph;
     /**
      * Identifikačné číslo organizácie podnikateľa.
+     * @var string|null
      */
     public ?string $ico;
     /**
      * Celková suma DPH pre základnú sadzbu dane podľa zákona
      * č. 222/2004 Z.z.
+     * @var float|null
      */
     public ?float $basicVatAmount;
     /**
      * Celková suma DPH pre zníženú sadzbu dane podľa zákona
      * č. 222/2004 Z.z.
+     * @var float|null
      */
     public ?float $reducedVatAmount;
     /**
      * Celková suma oslobodená od DPH.
+     * @var float|null
      */
     public ?float $taxFreeAmount;
     /**
      * Celková suma základu DPH pre základnú sadzbu dane podľa
      * zákona č. 222/2004 Z.z.
+     * @var float|null
      */
     public ?float $taxBaseBasic;
     /**
@@ -87,28 +99,32 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
     public ?float $taxBaseReduced;
     /**
      * Položky dokladu.
-     * @var ReceiptItemDto[]
+     * @var ReceiptItemDto[]|null
      */
     public ?array $items;
     /**
+     * @var string|null
      * Overovací kód podnikateľa.
      */
     public ?string $okp;
     /**
      * Podpisový kód podnikateľa.
+     * @var string|null
      */
     public ?string $pkp;
     /**
      * Platidlá.
-     * @var ReceiptPaymentDto[]
+     * @var ReceiptPaymentDto[]|null
      */
     public ?array $payments;
     /**
      * Textová hlavička dokladu.
+     * @var string|null
      */
     public ?string $headerText;
     /**
      * Textová pätička dokladu.
+     * @var string|null
      */
     public ?string $footerText;
 }

@@ -31,3 +31,7 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
  - Vytvorená nová trieda výnimky `ExposeException` pre chyby *Expose* služby.
  - Vytvorená nová trieda výnimky `ResponseException`. Tá je základným typom pre triedy `ApiException` (výnimka pre chyby *eKasa API* služby) a `ExposeException`.
  - Vytvorená nová trieda `ExposeError`. Tá obsahuje identifikátor chyby *Expose* služby.
+
+## [0.0.7] - 2023-12-01
+ - Doplnené typové anotácie `@var` na vlastnosti deserializovaných modelov
+ - Opravené chyby v dokumentačných súboroch *INTEGRATOR.md* a *README.md*

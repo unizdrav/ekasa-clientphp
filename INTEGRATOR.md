@@ -44,4 +44,4 @@ $client = new ApiClient($clientOptions);
  - Wiki: [http://ekasa.ninedigit.sk/wiki](http://ekasa.ninedigit.sk/wiki)
  - Dokumentácia k API:
     - [https://developer.ninedigit.sk/ekasa/webapi](https://developer.ninedigit.sk/ekasa/webapi)
-    - [http://localhost:3030/docs/index.html](http://localhost:3030/docs/index.html)
+    - [http://localhost:3010/docs/index.html](http://localhost:3010/docs/index.html)

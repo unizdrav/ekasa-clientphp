@@ -13,6 +13,7 @@ abstract class RegisterResultRequestDto {
     public string $id;
     /**
      * Externý unikátny identifikátor požiadavky.
+     * @var string
      */
     public string $externalId;
     /**
@@ -20,10 +21,12 @@ abstract class RegisterResultRequestDto {
      * Pri opakovaných pokusoch o odoslanie môže byť neskorší,
      * ako dátum vytvorenia dátovej správy.
      * @example 2019-01-29T16:07:01+01:00
+     * @var DateTime|null
      */
     public ?DateTime $date;
     /**
      * Poradové číslo pokusu o odoslanie požiadavky do systému e-Kasa.
+     * @var int|null
      */
     public ?int $sendingCount;
 }
