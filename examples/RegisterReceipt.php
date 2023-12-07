@@ -7,7 +7,7 @@ use NineDigit\eKasa\Client\AccessTokenSource;
 use NineDigit\eKasa\Client\ApiClientAuthenticationAccessTokenOptions;
 use NineDigit\eKasa\Client\ApiClientAuthenticationOptions;
 use NineDigit\eKasa\Client\Credentials;
-use NineDigit\eKasa\Client\EKasaEnvironment;
+use NineDigit\eKasa\Client\EKasaServer;
 use NineDigit\eKasa\Client\ApiClient;
 use NineDigit\eKasa\Client\ApiClientOptions;
 use NineDigit\eKasa\Client\Models\QuantityDto;
@@ -35,9 +35,9 @@ require '../vendor/autoload.php';
     // 1.1. Nastavenia adresy eKasa API servera
 
     // Ak sa pripájate cez internet a máte zakúpenú službu Expose
-    $url = EKasaEnvironment::exposeProduction("my-shop"); // resp. $url = EKasaEnvironment::exposePlayground("my-shop");
+    $url = EKasaServer::exposeDefault("my-shop");
     // Ak sa pripájate cez lokálnu sieť
-    $url = EKasaEnvironment::LOCALHOST;
+    $url = EKasaServer::LOCALHOST;
 
     // 1.2 Nastavenie autentifikácie
 

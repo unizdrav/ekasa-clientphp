@@ -35,7 +35,7 @@ Po tomto kroku je všetko pripravené. Stav systému môžete overiť na domovsk
 ### Inštanciácia klienta
 
 ```php
-$clientOptions = new ApiClientOptions(EKasaEnvironment::LOCALHOST);
+$clientOptions = new ApiClientOptions(EKasaServer::LOCALHOST);
 $client = new ApiClient($clientOptions);
 ```
 

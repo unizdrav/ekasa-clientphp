@@ -19,12 +19,6 @@ final class ApiRequestQueryStringBuilder
         return $this;
     }
 
-    public function accept(string $value): ApiRequestQueryStringBuilder
-    {
-        $this->queryString['Accept'] = $value;
-        return $this;
-    }
-
     public function clear(): void
     {
         array_splice($this->queryString, 0);

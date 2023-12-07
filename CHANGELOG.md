@@ -35,3 +35,15 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 ## [0.0.7] - 2023-12-01
  - Doplnené typové anotácie `@var` na vlastnosti deserializovaných modelov
  - Opravené chyby v dokumentačných súboroch *INTEGRATOR.md* a *README.md*
+
+## [1.0.0] - 2023-12-07
+ - Trieda `EKasaEnvironment` je nahradená triedou `EKasaServer` a bude vymazaná vo verzií *2.0.0*.
+ - Pridaný nový chybový kód do `ApiErrorCode` `UNAUTHENTICATED`.
+ - Pridaná chyba `ApiAuthenticationException`, ktorá nastane po zlyhaní prihlásenia.
+ - Pridaná nová trieda `AuthenticationSchemeName`, ktorá obsahuje zoznam autentifikačných schém. Tá je užitočná pri vyhodnocovaní chyby `ApiAuthenticationException`.
+
+### Zmeny netýkajúce sa konzumenta knižnice
+
+ - Trieda `HttpClient` je testovateľná pomocou triedy `TestableHttpClient`.
+ - Všetky vlastnosti triedy `ApiResponseMessage` boli nahradené metódami a boli pridané nové metódy.
+ - Pridané "enumeračné" triedy `AuthenticationSchemeName`, `HeaderName` a `MediaTypeName`.

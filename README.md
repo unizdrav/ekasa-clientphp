@@ -67,7 +67,7 @@ Služba je po inštalácií štandardne dostupná na porte `3010` (`http://local
 Klientskú triedu inštanciujte nasledovne:
 
 ```php
-$clientOptions = new ApiClientOptions(EKasaEnvironment::LOCALHOST);
+$clientOptions = new ApiClientOptions(EKasaServer::LOCALHOST);
 $client = new ApiClient($clientOptions);
 ```
 
@@ -88,7 +88,7 @@ Pre aktiváciu služby a získanie prihlasovacích údajov nás kontaktujte na e
 Pri použití Expose služby inštanciujete klientskú triedu nasledovne:
 
 ```php
-$url = EKasaEnvironment::exposeProduction("{vas_nazov_domeny}");
+$url = EKasaServer::exposeProduction("{vas_nazov_domeny}");
 $accessTokenSource = AccessTokenSource::queryString("access_token");
 $accessTokenOptions = new ApiClientAuthenticationAccessTokenOptions("{vas_bezpecnostny_kluc}", $accessTokenSource);
 $authentication = new ApiClientAuthenticationOptions(null, $accessTokenOptions);
@@ -104,7 +104,7 @@ $client = new ApiClient($clientOptions);
 
 ```php
 // Vytvorenie klienta
-$clientOptions = new ApiClientOptions(EKasaEnvironment::LOCALHOST);
+$clientOptions = new ApiClientOptions(EKasaServer::LOCALHOST);
 $client = new ApiClient($clientOptions);
 
 // Nastavenia tlače

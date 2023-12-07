@@ -5,7 +5,8 @@ namespace NineDigit\eKasa\Client;
 /**
  * Kódy chyby vrátený z API
  */
-class ApiErrorCode {
+class ApiErrorCode
+{
     const UNKNOWN = 0;
     const GENERAL_ERROR = -100;
     const CLIENT_LOCKED = -101;
@@ -25,5 +26,9 @@ class ApiErrorCode {
     const PRINT_RECEIPT_ERROR = -502;
     const PRINTER_NOT_Ready = -503;
     const VALIDATION_ERROR = -900;
-    const OPTIONS_VALIDATION_ERROR = -901;
+    const UNAUTHENTICATED = -1000;
+
+    private function __construct()
+    {
+    }
 }

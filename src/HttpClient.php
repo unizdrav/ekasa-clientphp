@@ -7,7 +7,8 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Header;
+use NineDigit\eKasa\Client\Exceptions\ApiAuthenticationException;
+use NineDigit\eKasa\Client\Exceptions\ApiException;
 use NineDigit\eKasa\Client\ExposeErrorCode;
 use NineDigit\eKasa\Client\Exceptions\ExposeException;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
@@ -69,6 +70,8 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
+     * @throws Exception
+     * @throws ApiAuthenticationException
      * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
@@ -81,9 +84,11 @@ class HttpClient implements HttpClientInterface
     }
 
     /**
+     * @throws GuzzleException
+     * @throws ApiAuthenticationException
      * @throws ExposeException
      * @throws ProblemDetailsException
-     * @throws ValidationProblemDetailsExceptions
+     * @throws ValidationProblemDetailsException
      */
     public function receive(ApiRequest $request, $type)
     {
@@ -98,12 +103,12 @@ class HttpClient implements HttpClientInterface
         $headers = array_merge($this->defaultHttpHeaders, $request->headers);
         $queryString = array_merge($this->defaultQueryString, $request->queryString);
 
-        if (!array_key_exists("Content-Type", $headers) || empty($headers["Content-Type"])) {
-            $headers["Content-Type"] = "application/json; charset=utf-8";
+        if (!array_key_exists(HeaderName::CONTENT_TYPE, $headers) || empty($headers[HeaderName::CONTENT_TYPE])) {
+            $headers[HeaderName::CONTENT_TYPE] = MediaTypeName::APPLICATION_JSON . "; charset=utf-8";
         }
 
-        if (!array_key_exists("Accept", $headers) || empty($headers["Accept"])) {
-            $headers["Accept"] = "application/json";
+        if (!array_key_exists(HeaderName::ACCEPT, $headers) || empty($headers[HeaderName::ACCEPT])) {
+            $headers[HeaderName::ACCEPT] = MediaTypeName::APPLICATION_JSON;
         }
 
         // https://stackoverflow.com/a/57226671/1391492
@@ -145,27 +150,27 @@ class HttpClient implements HttpClientInterface
         foreach ($guzzleResponse->getHeaders() as $key => $values)
             $headers[$key] = implode(', ', $values);
 
-        $response = new ApiResponseMessage();
-        $response->statusCode = $guzzleResponse->getStatusCode();
-        $response->headers = $headers;
-        $response->body = $body;
+        $response = new ApiResponseMessage($guzzleResponse->getStatusCode(), $headers, $body);
 
         return $response;
     }
 
     /**
+     * @throws Exception
+     * @throws ApiAuthenticationException
      * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
      */
-    private function deserializeResponseMessage(ApiResponseMessage $response, $classType)
+    protected function deserializeResponseMessage(ApiResponseMessage $response, $classType)
     {
         $this->throwOnError($response);
-        return $this->serializer->deserialize($response->body, $classType);
+        return $this->serializer->deserialize($response->getBody(), $classType);
     }
 
     /**
      * @throws Exception
+     * @throws ApiAuthenticationException
      * @throws ExposeException
      * @throws ProblemDetailsException
      * @throws ValidationProblemDetailsException
@@ -176,19 +181,31 @@ class HttpClient implements HttpClientInterface
             return;
         }
 
-        $contentType = Header::parse($response->headers["Content-Type"] ?? '')[0][0] ?? '';
-        $isBeyondCodeExposeResponse = boolval($response->headers["BeyondCode-Expose-Response"] ?? false);
-        $isJsonContentType = $contentType === "application/json" || $contentType === "application/problem+json";
+        $isBeyondCodeExposeResponse = $response->getBooleanHeader(HeaderName::BEYONDCODE_EXPOSE_RESPONSE);
+        $isJsonContentType = $response->hasContentType(MediaTypeName::APPLICATION_JSON, MediaTypeName::APPLICATION_PROBLEM_JSON);
 
         if ($isJsonContentType) {
             if (!$isBeyondCodeExposeResponse) {
-                if ($response->statusCode === 400 || $response->statusCode === 422) {
-                    $validationProblemDetails = $this->serializer->deserialize($response->body, ValidationProblemDetails::class);
+                if ($response->hasStatusCode(400) || $response->hasStatusCode(422)) {
+                    $validationProblemDetails = $this->serializer->deserialize($response->getBody(), ValidationProblemDetails::class);
                     throw new ValidationProblemDetailsException($validationProblemDetails);
+                } else if ($response->hasStatusCode(401)) {
+                    $errorMessage = "Autentifikácia zlyhala.";
+                    $schemeName = $response->getHeader(HeaderName::WWW_AUTHENTICATE);
+                    switch ($schemeName) {
+                        case AuthenticationSchemeName::ACCESS_TOKEN:
+                            $errorMessage = "Autentifikácia zlyhala. Skontrolujte správnosť bezpečnostného kľúča.";
+                            break;
+                        case AuthenticationSchemeName::BASIC:
+                            $errorMessage = "Autentifikácia zlyhala. Skontrolujte správnosť prihlasovacích údajov.";
+                            break;
+                    }
+                    throw new ApiAuthenticationException($response->getStatusCode(), $schemeName, $errorMessage);
+                } else {
+                    $problemDetails = $this->serializer->deserialize($response->getBody(), ProblemDetails::class);
                 }
-                $problemDetails = $this->serializer->deserialize($response->body, ProblemDetails::class);
             } else {
-                $exposeError = $this->serializer->deserialize($response->body, ExposeError::class);
+                $exposeError = $this->serializer->deserialize($response->getBody(), ExposeError::class);
                 $errorMessage = $exposeError->error;
 
                 switch ($exposeError->errorCode)
@@ -198,10 +215,10 @@ class HttpClient implements HttpClientInterface
                         break;
                 }
 
-                throw new ExposeException($response->statusCode, $errorMessage, $exposeError->errorCode);
+                throw new ExposeException($response->getStatusCode(), $errorMessage, $exposeError->errorCode);
             }
         } else {
-            $problemDetails = new StatusCodeProblemDetails($response->statusCode);
+            $problemDetails = new StatusCodeProblemDetails($response->getStatusCode());
         }
         
         throw new Exceptions\ProblemDetailsException($problemDetails);

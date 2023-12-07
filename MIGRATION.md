@@ -1,3 +1,11 @@
+# Migrácia medzi verziami
+
+## Prechod z verzie `0.0.7` na `1.0.0`
+
+ - Trieda `EKasaEnvironment` je nahradená triedou `EKasaServer` a bude vymazaná vo verzií *2.0.0*.
+ Volanie `EKasaEnvironment::LOCALHOST` je nahradené `EKasaServer::LOCALHOST` a `EKasaEnvironment::exposeProduction($subdomain)` je nahradené `EKasaServer::exposeDefault($subdomain)`. Volanie `EKasaEnvironment::exposePlayground($subdomain)` bude odstránené bez náhrady.
+ - 
+
 # Migrácia z knižnice `ekasa-cloud-clientphp` na `ekasa-clientphp`
 
 Projekt *eKasa Cloud* bol nahradený službou *Expose*.
@@ -17,7 +25,7 @@ V prípade, ak vo vašom systéme používate PHP knižnicu pre eKasa Cloud ([ek
 > - [Príklady](https://github.com/ninedigit/ekasa-cloud-clientphp/tree/master/examples) pre pôvodnú knižnicu `ekasa-cloud-clientphp` 
 > - [Príklady](https://github.com/ninedigit/ekasa-clientphp/tree/master/examples) pre novú knižnicu `ekasa-clientphp` 
 
-1. Nastavenia klienta triedou `ApiClientOptions` majú zmenené parametre. Tu je možné určiť spôsob pripojenia k eKasa API a to buď lokálne (`EKasaEnvironment::LOCALHOST`) alebo prostredníctvom Expose služby (`EKasaEnvironment::exposePlayground(...)` resp. `EKasaEnvironment::exposeProduction(...)`).
+1. Nastavenia klienta triedou `ApiClientOptions` majú zmenené parametre. Tu je možné určiť spôsob pripojenia k eKasa API a to buď lokálne (`EKasaServer::LOCALHOST`) alebo prostredníctvom Expose služby `EKasaServer::exposeDefault(...)`.
 1. Práca s tlačiarňami sa nezmenila, ich prislúchajúce triedy majú však zmenené názvy. Viďte tabuľu nižšie.
 1. Trieda položky dokladu má zmenený názov, no jej štruktúra je identická. Pribudla trieda `ReceiptItemBuilder` na pohodlnejšiu tvorbu položiek dokladu.
 1. Trieda dokladu má taktiež zmenený názov. Štruktúra je do veľkej miery identická. Vlastnosť `externalId` sa však nastavuje v triede, ktorá zaobaľuje triedu dokladu s externým identifikátorom - `RegisterReceiptRequestDto`. Na vytvorenie objektu dokladu je možné využiť `ReceiptBuilder`.

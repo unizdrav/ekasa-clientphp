@@ -11,7 +11,7 @@ final class ApiClientOptions
     /**
      * Url adresa e-Kasa API servera
      * @example "http://localhost:3010/api"
-     * @see EKasaEnvironment
+     * @see EKasaServer
      */
     public string $url;
 
@@ -40,7 +40,7 @@ final class ApiClientOptions
     public ?SerializerInterface $serializer = null;
 
     public function __construct(
-        ?string                         $url = EKasaEnvironment::LOCALHOST,
+        ?string                         $url = EKasaServer::LOCALHOST,
         ?ApiClientAuthenticationOptions $authentication = null,
         ?string                         $proxyUrl = null,
         ?bool                           $debug = false
@@ -68,7 +68,7 @@ final class ApiClientOptions
 
         $authentication = null;
 
-        $url = $data["url"] ?? EKasaEnvironment::LOCALHOST;
+        $url = $data["url"] ?? EKasaServer::LOCALHOST;
         $proxyUrl = $data["proxyUrl"] ?? null;
 
         $authenticationData = $data["authentication"] ?? null;

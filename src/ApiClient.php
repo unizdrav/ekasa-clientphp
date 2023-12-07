@@ -35,6 +35,8 @@ final class ApiClient {
    * @throws ValidationProblemDetailsException ak nie je požiadavka valídna
    * @throws ProblemDetailsException
    * @throws ExposeException
+   * @throws ApiAuthenticationException
+   * @throws Exception
    */
   public function registerReceipt(RegisterReceiptRequestContextDto $context): RegisterReceiptResultDto {
     $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts")

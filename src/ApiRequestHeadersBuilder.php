@@ -21,7 +21,7 @@ final class ApiRequestHeadersBuilder
 
     public function accept(string $value): ApiRequestHeadersBuilder
     {
-        $this->headers['Accept'] = $value;
+        $this->headers[HeaderName::ACCEPT] = $value;
         return $this;
     }
 

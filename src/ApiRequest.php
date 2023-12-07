@@ -2,7 +2,8 @@
 
 namespace NineDigit\eKasa\Client;
 
-final class ApiRequest {
+final class ApiRequest
+{
   public string $method;
   public string $path;
   public array $headers = array();

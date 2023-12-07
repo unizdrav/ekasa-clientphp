@@ -9,7 +9,7 @@ use NineDigit\eKasa\Client\AccessTokenSource;
 use NineDigit\eKasa\Client\ApiClientAuthenticationAccessTokenOptions;
 use NineDigit\eKasa\Client\ApiClientAuthenticationOptions;
 use NineDigit\eKasa\Client\Credentials;
-use NineDigit\eKasa\Client\EKasaEnvironment;
+use NineDigit\eKasa\Client\EKasaServer;
 use PHPUnit\Framework\TestCase;
 use NineDigit\eKasa\Client\ApiClient;
 use NineDigit\eKasa\Client\ApiClientOptions;
@@ -21,7 +21,7 @@ final class ApiClientTest extends TestCase {
     }
 
     public function testCreateInstanceFromOptions() {
-        $environment = EKasaEnvironment::exposeProduction("test");
+        $environment = EKasaServer::exposeDefault("test");
         $credentials = new Credentials("admin", "admin");
         $accessToken = new ApiClientAuthenticationAccessTokenOptions("token-123", AccessTokenSource::header("X-Access-Token"));
         $authentication = new ApiClientAuthenticationOptions($credentials, $accessToken);
