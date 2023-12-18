@@ -42,7 +42,6 @@ final class ApiClient {
     $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts")
       ->withPayload($context)
       ->build();
-
-      return $this->httpClient->receive($apiRequest, RegisterReceiptResultDto::class);
+    return $this->httpClient->receive($apiRequest, RegisterReceiptResultDto::class);
   }
 }

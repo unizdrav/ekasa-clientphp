@@ -43,7 +43,9 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
  - Pridaná nová trieda `AuthenticationSchemeName`, ktorá obsahuje zoznam autentifikačných schém. Tá je užitočná pri vyhodnocovaní chyby `ApiAuthenticationException`.
 
 ### Zmeny netýkajúce sa konzumenta knižnice
-
  - Trieda `HttpClient` je testovateľná pomocou triedy `TestableHttpClient`.
  - Všetky vlastnosti triedy `ApiResponseMessage` boli nahradené metódami a boli pridané nové metódy.
  - Pridané "enumeračné" triedy `AuthenticationSchemeName`, `HeaderName` a `MediaTypeName`.
+
+## [1.1.0] - 2023-12-18
+ - Aktualizácia závislostí.

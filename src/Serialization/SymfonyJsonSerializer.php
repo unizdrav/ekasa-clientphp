@@ -24,9 +24,6 @@ final class SymfonyJsonSerializer implements SerializerInterface
 
     function __construct()
     {
-        // Deprecated and will be removed in 2.0 but currently needed
-        AnnotationRegistry::registerLoader('class_exists');
-
         $extractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
