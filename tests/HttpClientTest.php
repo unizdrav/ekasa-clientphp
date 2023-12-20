@@ -69,7 +69,6 @@ final class HttpClientTest extends TestCase {
 
         try {
             $result = $client->callDeserializeResponseMessage($responseMessage, RegisterReceiptResultDto::class);
-            var_dump($result);
         } catch (Throwable $e) {
             $throws = true;
         }

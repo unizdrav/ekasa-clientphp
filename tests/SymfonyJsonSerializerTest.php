@@ -285,7 +285,7 @@ final class SymfonyJsonSerializerTest extends TestCase
 
         $this->assertInstanceOf(RegisterReceiptResultDto::class, $result);
         $this->assertInstanceOf(RegisterReceiptResultRequestDto::class, $result->request);
-        $this->assertInstanceOf(ReceiptregistrationDataDto::class, $result->request->data);
+        $this->assertInstanceOf(ReceiptRegistrationDataDto::class, $result->request->data);
 
         $this->assertEquals(ReceiptType::CASH_REGISTER, $result->request->data->receiptType);
         $this->assertEquals(3.50, $result->request->data->amount);

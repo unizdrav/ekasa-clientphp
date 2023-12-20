@@ -4,7 +4,7 @@ namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 
 final class RegisterReceiptResultRequestDto extends RegisterResultRequestDto {
     /**
-     * @var ReceiptregistrationDataDto
+     * @var ReceiptRegistrationDataDto
      */
-    public ReceiptregistrationDataDto $data;
+    public ReceiptRegistrationDataDto $data;
 }

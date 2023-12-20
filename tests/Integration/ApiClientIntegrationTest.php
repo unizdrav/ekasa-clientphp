@@ -79,8 +79,6 @@ final class ApiClientIntegrationTest extends TestCase {
         }
         catch (Exception | Error $e)
         {
-            print_r($e->getMessage());
-            print_r($e->getTraceAsString());
             $throws = true;
         }
 
