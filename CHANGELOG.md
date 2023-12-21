@@ -52,3 +52,6 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] - 2023-12-20
  - Oprava chyby deserializácie triedy `ReceiptRegistrationDataDto` (`The type of the "data" attribute for class "NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptResultRequestDto" must be one of "NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptregistrationDataDto" ("array" given).`).
+
+## [1.3.0] - 2023-12-21
+ - Úprava verzie závislosti `doctrine/annotations` z `^2.0` na `^1.13 || ^2.0`.
