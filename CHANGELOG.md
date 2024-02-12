@@ -59,3 +59,6 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 ## [2.0.0] - 2024-02-12
  - Úprava verzie závislosti PHP z `7.4.0` na `8.1.0` a `symfony/*` z `^5.4` na `^6.4`
  - Úprava súboru `LICENSE`
+
+## [2.0.1] - 2024-02-12
+ - Oprava verzie závislosti PHP z `>=7.4` na `>=8.1`

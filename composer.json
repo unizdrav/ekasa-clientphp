@@ -1,7 +1,7 @@
 {
     "name": "ninedigit/ekasa-clientphp",
     "type": "library",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "API client for eKasa API",
     "homepage": "https://bitbucket.org/9digit/ekasa-clientphp",
     "keywords": ["ekasa", "api", "rest", "http", "client"],
@@ -25,7 +25,7 @@
     "require": {
         "doctrine/common": "*",
         "doctrine/annotations": "^1.13 || ^2.0",
-        "php": ">=7.4",
+        "php": ">=8.1",
         "guzzlehttp/guzzle": "^7.0",
         "symfony/serializer": "^6.4",
         "symfony/property-access": "^6.4",
