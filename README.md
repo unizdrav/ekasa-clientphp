@@ -5,7 +5,7 @@ HTTP klient v jazyku PHP pre [e-Kasa API riešenie](https://ekasa.ninedigit.sk) 
 
 # Inštalácia
 
-Knižnica je kompatibilná s PHP vo verzii 7.4 a vyššej.
+Knižnica je kompatibilná s PHP vo verzii 8.1 a vyššej.
 
 ## Inštalácia cez Packagist
 
@@ -212,5 +212,5 @@ Napríklad:
 ## Overenie kompatibility PHP
 
 ```
-./vendor/bin/phpcs --standard=PHPCompatibility --extensions=php --runtime-set testVersion 7.4- ./src
+./vendor/bin/phpcs --standard=PHPCompatibility --extensions=php --runtime-set testVersion 8.1- ./src
 ```
