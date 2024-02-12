@@ -55,3 +55,7 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 
 ## [1.3.0] - 2023-12-21
  - Úprava verzie závislosti `doctrine/annotations` z `^2.0` na `^1.13 || ^2.0`.
+
+## [2.0.0] - 2024-02-12
+ - Úprava verzie závislosti PHP z `7.4.0` na `8.1.0` a `symfony/*` z `^5.4` na `^6.4`
+ - Úprava súboru `LICENSE`
