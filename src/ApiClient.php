@@ -5,6 +5,7 @@ namespace NineDigit\eKasa\Client;
 use InvalidArgumentException;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
 use NineDigit\eKasa\Client\Exceptions\ValidationProblemDetailsException;
+use NineDigit\eKasa\Client\Models\EKasaProductInfoDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestContextDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptResultDto;
 
@@ -26,6 +27,16 @@ final class ApiClient {
     } else {
       throw new InvalidArgumentException("Expecting ". ApiClientOptions::class ." or ". HttpClientInterface::class . " type as an argument.");
     }
+  }
+
+  // Product
+
+  /**
+   * Získanie informácii o pokladničnom programe a aktuálne pripojenom chránenom dátovom úložisku.
+   */
+  public function getProductInfo(): EKasaProductInfoDto {
+    $apiRequest = ApiRequestBuilder::createGet("/v1/product/info")->build();
+    return $this->httpClient->receive($apiRequest, EKasaProductInfoDto::class);
   }
 
   // Registrations

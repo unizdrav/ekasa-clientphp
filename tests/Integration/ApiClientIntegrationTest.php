@@ -47,6 +47,24 @@ final class ApiClientIntegrationTest extends TestCase {
         return ApiClientIntegrationTestOptions::load(dirname(__FILE__) . '/settings.json');
     }
 
+    public function testGetProductInfo() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getProductInfo();
+            var_dump($result);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
     public function testRegisterCashRegisterReceiptUsingPosPrinter() {
         $settings = $this->getSettings();
         $apiClient = new ApiClient($settings->apiClientOptions);
