@@ -19,4 +19,9 @@ class CashRegisterReceiptBuilder extends ReceiptBuilder
         array_push($this->receipt->payments, ...$payment);
         return $this;
     }
+
+    public function addCashPayment(float $amount): CashRegisterReceiptBuilder {
+        $payment = new ReceiptPaymentDto($amount, ReceiptPaymentName::CASH);
+        return $this->addPayment($payment);
+    }
 }

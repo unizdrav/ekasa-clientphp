@@ -20,4 +20,13 @@ final class RegisterReceiptRequestContextDto {
         $this->print = $print;
         $this->request = $request;
     }
+
+    public static function create(
+        ReceiptDto $receipt,
+        RegisterReceiptPrintContextDto $printer,
+        ?string $externalId = null
+    ): RegisterReceiptRequestContextDto {
+        $registerReceiptRequest = new RegisterReceiptRequestDto($receipt, $externalId);
+        return new RegisterReceiptRequestContextDto($printer, $registerReceiptRequest);
+    }
 }
