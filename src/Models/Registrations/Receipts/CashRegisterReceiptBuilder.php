@@ -20,7 +20,8 @@ class CashRegisterReceiptBuilder extends ReceiptBuilder
         return $this;
     }
 
-    public function addCashPayment(float $amount): CashRegisterReceiptBuilder {
+    public function addCashPayment(float $amount): CashRegisterReceiptBuilder
+    {
         $payment = new ReceiptPaymentDto($amount, ReceiptPaymentName::CASH);
         return $this->addPayment($payment);
     }

@@ -4,16 +4,39 @@ namespace NineDigit\eKasa\Client\Tests;
 
 use PHPUnit\Framework\TestCase;
 use NineDigit\eKasa\Client\ApiClientOptions;
+use NineDigit\eKasa\Client\ApiRequest;
 use NineDigit\eKasa\Client\ApiResponseMessage;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
+use NineDigit\eKasa\Client\HttpMethod;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptResultDto;
 use NineDigit\eKasa\Client\Serialization\SymfonyJsonSerializer;
 use NineDigit\eKasa\Client\Tests\TestableHttpClient;
 
 use Throwable;
 
-final class HttpClientTest extends TestCase {
-    public function testThrowOnErrorThrowsStatusCodeProblemDetailsForResponseWithErrorStatusCodeAndNoBody() {
+final class HttpClientTest extends TestCase
+{
+    public function testCreateRequestMessageEncodesQueryParametersCorrectly()
+    {
+        $apiClientOptions = new ApiClientOptions('https://example.com');
+        $client = new TestableHttpClient($apiClientOptions);
+        $apiRequest = new ApiRequest(HttpMethod::GET, '/users', array('full_name' => 'John Doe', 'age' => '>=30'));
+
+        $apiRequestMessage = $client->callCreateRequestMessage($apiRequest);
+
+        $this->assertEquals('GET', $apiRequestMessage->method);
+        $this->assertEquals('https://example.com/users?full_name=John%20Doe&age=%3E%3D30', $apiRequestMessage->url);
+        $this->assertNull($apiRequestMessage->body);
+        $this->assertIsArray($apiRequestMessage->headers);
+        $this->assertCount(2, $apiRequestMessage->headers);
+        $this->assertArrayHasKey('Content-Type', $apiRequestMessage->headers);
+        $this->assertEquals('application/json; charset=utf-8', $apiRequestMessage->headers['Content-Type']);
+        $this->assertArrayHasKey('Accept', $apiRequestMessage->headers);
+        $this->assertEquals('application/json', $apiRequestMessage->headers['Accept']);
+    }
+
+    public function testThrowOnErrorThrowsStatusCodeProblemDetailsForResponseWithErrorStatusCodeAndNoBody()
+    {
         $apiClientOptions = new ApiClientOptions();
         $client = new TestableHttpClient($apiClientOptions);
         $response = new ApiResponseMessage(403);

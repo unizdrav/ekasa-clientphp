@@ -8,7 +8,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use NineDigit\eKasa\Client\Exceptions\ApiAuthenticationException;
-use NineDigit\eKasa\Client\Exceptions\ApiException;
 use NineDigit\eKasa\Client\ExposeErrorCode;
 use NineDigit\eKasa\Client\Exceptions\ExposeException;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
@@ -97,9 +96,9 @@ class HttpClient implements HttpClientInterface
         return $this->deserializeResponseMessage($responseMessage, $type);
     }
 
-    private function createRequestMessage(ApiRequest $request): ApiRequestMessage
+    protected function createRequestMessage(ApiRequest $request): ApiRequestMessage
     {
-        $body = $this->serializer->serialize($request->payload);
+        $body = $request->payload !== null ? $this->serializer->serialize($request->payload) : null;
         $headers = array_merge($this->defaultHttpHeaders, $request->headers);
         $queryString = array_merge($this->defaultQueryString, $request->queryString);
 
@@ -117,7 +116,7 @@ class HttpClient implements HttpClientInterface
         $url = rtrim($this->url, "/") . "/" . $path;
 
         if (count($queryString) > 0) {
-            $url .= "?" . htmlspecialchars(http_build_query($queryString, "", "&", PHP_QUERY_RFC3986));
+            $url .= "?" . http_build_query($queryString, "", "&", PHP_QUERY_RFC3986);
         }
         
         return new ApiRequestMessage($request->method, $url, $headers, $body);
