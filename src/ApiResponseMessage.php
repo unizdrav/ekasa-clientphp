@@ -10,13 +10,13 @@ final class ApiResponseMessage
 {
     private int $statusCode;
     private array $headers;
-    private ?string $body;
+    private ?string $content;
 
-    public function __construct(int $statusCode = 204, array $headers = array(), ?string $body = null)
+    public function __construct(int $statusCode = 204, array $headers = array(), ?string $content = null)
     {
         $this->statusCode = $statusCode;
         $this->headers = array();
-        $this->body = $body;
+        $this->content = $content;
 
         $this->setHeaders($headers);
     }
@@ -67,8 +67,15 @@ final class ApiResponseMessage
         }
     }
 
+    /**
+     * @deprecated Use getContent method instead.
+     */
     public function getBody(): ?string {
         return $this->body;
+    }
+
+    public function getContent(): ?string {
+        return $this->content;
     }
 
     public function getContentType(): ?string {
@@ -78,5 +85,21 @@ final class ApiResponseMessage
     public function hasContentType(...$contentTypes): bool {
         $contentType = $this->getContentType();
         return in_array($contentType, $contentTypes);
+    }
+
+    public function hasApplicationJsonContent(): bool {
+        return $this->hasContentType(MediaTypeName::APPLICATION_JSON);
+    }
+
+    public function hasApplicationProblemJsonContent(): bool {
+        return $this->hasContentType(MediaTypeName::APPLICATION_PROBLEM_JSON);
+    }
+
+    public function hasApplicationPdfContent(): bool {
+        return $this->hasContentType(MediaTypeName::APPLICATION_PDF);
+    }
+
+    public function hasApplicationZipContent(): bool {
+        return $this->hasContentType(MediaTypeName::APPLICATION_ZIP);
     }
 }

@@ -62,3 +62,19 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
 
 ## [2.0.1] - 2024-02-12
  - Oprava verzie závislosti PHP z `>=7.4` na `>=8.1`
+
+## [2.1.0] - 2024-02-14
+ - Pridaná podpora pre `symfony/* ^5.4` a `php ^7.4`
+
+## [2.1.1] - 2024-04-24
+ - Pridaná nová metóda `getProductInfo` do triedy `ApiClient`
+
+## [2.1.3] - 2024-10-02
+ - Oprava chyby, kedy dopyt URL adresy bol nesprávne skonštruovaný pre viac ako jeden parameter
+ - Oprava chyby, kedy vlastnosť `payload` triedy `ApiRequestMessage` bola serializovaná ako reťazec s hodnotou `"null"` namiesto `null`
+
+## [2.1.4] - 2024-10-31
+ - Pridaná nová metóda `receiveRaw` do triedy `HttpClient`
+ - Pridané nové hodnoty do triedy `MediaTypeName`
+ - Pridané nové metódy na zistenie typu obsahu odpovede v triede `ApiResponseMessage`
+ - Pridaná nová metóda `getContent` do triedy `ApiReponseMessage`, ktorá dobudúcna nahradí metódu `getBody`

@@ -91,9 +91,20 @@ class HttpClient implements HttpClientInterface
      */
     public function receive(ApiRequest $request, $type)
     {
+        $responseMessage = $this->receiveRaw($request, false);
+        return $this->deserializeResponseMessage($responseMessage, $type);
+    }
+
+    public function receiveRaw(ApiRequest $request, $throwOnError = true): ApiResponseMessage
+    {
         $requestMessage = $this->createRequestMessage($request);
         $responseMessage = $this->sendRequestMessage($requestMessage);
-        return $this->deserializeResponseMessage($responseMessage, $type);
+
+        if ($throwOnError) {
+            $this->throwOnError($responseMessage);
+        }
+
+        return $responseMessage;
     }
 
     protected function createRequestMessage(ApiRequest $request): ApiRequestMessage
@@ -130,11 +141,7 @@ class HttpClient implements HttpClientInterface
         $headers = array();
 
         try {
-            $guzzleRequest = new Request(
-                $request->method,
-                $request->url,
-                $request->headers,
-                $request->body);
+            $guzzleRequest = new Request($request->method, $request->url, $request->headers, $request->body);
             $guzzleResponse = $this->client->send($guzzleRequest, ["debug" => $this->debug]);
             $body = $guzzleResponse->getBody();
         } catch (RequestException $ex) {
@@ -164,7 +171,12 @@ class HttpClient implements HttpClientInterface
     protected function deserializeResponseMessage(ApiResponseMessage $response, $classType)
     {
         $this->throwOnError($response);
-        return $this->serializer->deserialize($response->getBody(), $classType);
+
+        if ($response->hasApplicationJsonContent() || $response->hasApplicationProblemJsonContent()) {
+            return $this->serializer->deserialize($response->getContent(), $classType);
+        } else {
+            throw new Exception("Unsupported response content type.");
+        }
     }
 
     /**
@@ -181,12 +193,12 @@ class HttpClient implements HttpClientInterface
         }
 
         $isBeyondCodeExposeResponse = $response->getBooleanHeader(HeaderName::BEYONDCODE_EXPOSE_RESPONSE);
-        $isJsonContentType = $response->hasContentType(MediaTypeName::APPLICATION_JSON, MediaTypeName::APPLICATION_PROBLEM_JSON);
+        $isJsonContentType = $response->hasApplicationJsonContent() || $response->hasApplicationProblemJsonContent();
 
         if ($isJsonContentType) {
             if (!$isBeyondCodeExposeResponse) {
                 if ($response->hasStatusCode(400) || $response->hasStatusCode(422)) {
-                    $validationProblemDetails = $this->serializer->deserialize($response->getBody(), ValidationProblemDetails::class);
+                    $validationProblemDetails = $this->serializer->deserialize($response->getContent(), ValidationProblemDetails::class);
                     throw new ValidationProblemDetailsException($validationProblemDetails);
                 } else if ($response->hasStatusCode(401)) {
                     $errorMessage = "Autentifikácia zlyhala.";
@@ -201,10 +213,10 @@ class HttpClient implements HttpClientInterface
                     }
                     throw new ApiAuthenticationException($response->getStatusCode(), $schemeName, $errorMessage);
                 } else {
-                    $problemDetails = $this->serializer->deserialize($response->getBody(), ProblemDetails::class);
+                    $problemDetails = $this->serializer->deserialize($response->getContent(), ProblemDetails::class);
                 }
             } else {
-                $exposeError = $this->serializer->deserialize($response->getBody(), ExposeError::class);
+                $exposeError = $this->serializer->deserialize($response->getContent(), ExposeError::class);
                 $errorMessage = $exposeError->error;
 
                 switch ($exposeError->errorCode)
