@@ -78,3 +78,9 @@ a dodržiava [sémantické verzionovanie](https://semver.org/spec/v2.0.0.html).
  - Pridané nové hodnoty do triedy `MediaTypeName`
  - Pridané nové metódy na zistenie typu obsahu odpovede v triede `ApiResponseMessage`
  - Pridaná nová metóda `getContent` do triedy `ApiReponseMessage`, ktorá dobudúcna nahradí metódu `getBody`
+
+## [3.0.0] - 2024-11-12
+ - Úprava dátového typu `vatRate` objektu `ReceiptItemDto`, ktorý môže akceptovať aj `null` hodnotu pre položky nepodiehajúce DPH.
+ - Pridané vlastnosti `secondReducedVatAmount` a `taxBaseSecondReduced` súvisiace so zmenou DPH
+
+ Viac informácií o nadchádzajúcich legislatívnych zmenách nájdete na stránkach [Aktualizácia k zmenám platným od 1.1.2025](https://ekasa.ninedigit.sk/aktualizacia-k-zmenam-platnym-od-1-1-2025), [Migrácia na verziu 7](https://ekasa.ninedigit.sk/docs/articles/migration-guides/v7?tabs=sk), [Vat Rate - Sadzba dane z pridanej hodnoty](https://ekasa.ninedigit.sk/docs/articles/receipt-registration?tabs=tabid-1#27-vatrate---sadzba-dane-z-pridanej-hodnoty) a [Odpočet prijatej zálohy](https://ekasa.ninedigit.sk/docs/articles/receipt-registration#14-odpo%C4%8Det-prijatej-z%C3%A1lohy).

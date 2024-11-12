@@ -82,6 +82,12 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      */
     public ?float $reducedVatAmount;
     /**
+     * Celková suma DPH pre druhú zníženú sadzbu dane podľa
+     * zákona č. 222/2004 Z.z.
+     * @var float|null
+     */
+    public ?float $secondReducedVatAmount;
+    /**
      * Celková suma oslobodená od DPH.
      * @var float|null
      */
@@ -97,6 +103,11 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      * zákona č. 222/2004 Z.z.
      */
     public ?float $taxBaseReduced;
+    /**
+     * Celková suma základu DPH pre druhú zníženú sadzbu dane
+     * podľa zákona č. 222/2004 Z.z.
+     */
+    public ?float $taxBaseSecondReduced;
     /**
      * Položky dokladu.
      * @var ReceiptItemDto[]|null

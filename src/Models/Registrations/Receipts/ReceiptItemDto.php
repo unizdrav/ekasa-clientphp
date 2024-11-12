@@ -43,12 +43,13 @@ final class ReceiptItemDto {
      */
     public QuantityDto $quantity;
     /**
-     * Sadzba dane z pridanej hodnoty.
-     * Sadzba nadobúda hodnoty 20.00, 10.00 alebo 0.00.
-     * @example 20.00
-     * @var float
+     * Číselná hodnota s presnosťou na 2 desatinné miesta, alebo null pre označenie
+     * položky nepodliehajúcej DPH.
+     * @link https://ekasa.ninedigit.sk/docs/articles/receipt-registration?tabs=tabid-1#27-vatrate---sadzba-dane-z-pridanej-hodnoty
+     * @example 0.00
+     * @var float|null
      */
-    public float $vatRate;
+    public ?float $vatRate;
     /**
      * Číslo dokladu, ku ktorému sa vzťahuje oprava alebo vrátenie položky
      * Číslo dokladu ak sa jedná o položku typu Correction alebo Return alebo 
@@ -96,7 +97,7 @@ final class ReceiptItemDto {
         string $type = ReceiptItemType::POSITIVE,
         string $name = "",
         float $unitPrice = 0,
-        float $vatRate = 0,
+        ?float $vatRate = 0,
         ?QuantityDto $quantity = null,
         float $price = 0,
         ?string $description = null,
