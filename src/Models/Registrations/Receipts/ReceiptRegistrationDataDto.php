@@ -93,6 +93,11 @@ final class ReceiptRegistrationDataDto extends RegistrationDataDto
      */
     public ?float $taxFreeAmount;
     /**
+     * Celková suma položiek nepodliehajúcich DPH
+     * @var float|null
+     */
+    public ?float $nonTaxableAmount;
+    /**
      * Celková suma základu DPH pre základnú sadzbu dane podľa
      * zákona č. 222/2004 Z.z.
      * @var float|null
