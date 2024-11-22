@@ -85,4 +85,9 @@ final class ApiRequestBuilder
     {
         return new ApiRequestBuilder(HttpMethod::DELETE, $path, $queryString, $headers);
     }
+
+    public static function createHead(string $path, array $queryString = array(), array $headers = array()): ApiRequestBuilder
+    {
+        return new ApiRequestBuilder(HttpMethod::HEAD, $path, $queryString, $headers);
+    }
 }

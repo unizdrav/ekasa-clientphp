@@ -11,6 +11,7 @@ use NineDigit\eKasa\Client\Exceptions\ApiAuthenticationException;
 use NineDigit\eKasa\Client\ExposeErrorCode;
 use NineDigit\eKasa\Client\Exceptions\ExposeException;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
+use NineDigit\eKasa\Client\Models\ResponseCount;
 use NineDigit\eKasa\Client\Serialization\SerializerInterface;
 use NineDigit\eKasa\Client\Exceptions\ValidationProblemDetailsException;
 use NineDigit\eKasa\Client\Models\ExposeError;
@@ -99,12 +100,25 @@ class HttpClient implements HttpClientInterface
     {
         $requestMessage = $this->createRequestMessage($request);
         $responseMessage = $this->sendRequestMessage($requestMessage);
-
         if ($throwOnError) {
             $this->throwOnError($responseMessage);
         }
 
         return $responseMessage;
+    }
+
+    public function receiveCountItem(ApiRequest $request, $throwOnError = true): ResponseCount
+    {
+        $contentRange = $this->receiveRaw($request, $throwOnError)->getHeader("content-range");
+
+        if (preg_match('/items (\d+)-(\d+)\/(\d+)/', $contentRange, $matches)) {
+            $start = (int)$matches[1];
+            $end = (int)$matches[2];
+            $total = (int)$matches[3];
+            return new ResponseCount($start, $end, $total);
+        }else{
+            throw new Exception("Unsupported response header.");
+        }
     }
 
     protected function createRequestMessage(ApiRequest $request): ApiRequestMessage
@@ -129,7 +143,7 @@ class HttpClient implements HttpClientInterface
         if (count($queryString) > 0) {
             $url .= "?" . http_build_query($queryString, "", "&", PHP_QUERY_RFC3986);
         }
-        
+
         return new ApiRequestMessage($request->method, $url, $headers, $body);
     }
 
@@ -231,7 +245,7 @@ class HttpClient implements HttpClientInterface
         } else {
             $problemDetails = new StatusCodeProblemDetails($response->getStatusCode());
         }
-        
+
         throw new Exceptions\ProblemDetailsException($problemDetails);
     }
 }
