@@ -2,6 +2,7 @@
 
 namespace NineDigit\eKasa\Client\Models\Traits;
 
+use NineDigit\eKasa\Client\Models\Enums\ReceiptItemType;
 use NineDigit\eKasa\Client\Models\QuantityDto;
 use NineDigit\eKasa\Client\Models\SellerDto;
 
@@ -11,9 +12,9 @@ trait ReceiptItemTrait
      * Typ položky dokladu
      * @see ReceiptItemType
      * @example Positive
-     * @var string
+     * @var ReceiptItemType
      */
-    public string $type;
+    public ReceiptItemType $type;
     /**
      * Označenie tovaru alebo služby.
      * Neprázdny textový reťazec s maximálnou dĺžkou 255 znakov.

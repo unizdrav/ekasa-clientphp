@@ -2,6 +2,8 @@
 
 namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPaymentName;
+
 class CashRegisterReceiptBuilder extends ReceiptBuilder
 {
     public function setPayments(?array $payments): CashRegisterReceiptBuilder

@@ -3,6 +3,7 @@
 namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 
 use DateTime;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptType;
 
 class ReceiptBuilder
 {
@@ -19,7 +20,7 @@ class ReceiptBuilder
         return $this;
     }
 
-    protected function setReceiptType(string $receiptType): ReceiptBuilder
+    protected function setReceiptType(ReceiptType $receiptType): ReceiptBuilder
     {
         $this->receipt->receiptType = $receiptType;
         return $this;

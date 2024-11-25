@@ -2,6 +2,7 @@
 
 namespace NineDigit\eKasa\Client\Models\Traits;
 
+use NineDigit\eKasa\Client\Models\Enums\ReceiptType;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentDto;
 use DateTime;
@@ -13,7 +14,7 @@ trait ReceiptTrait
      * @see ReceiptType
      * @example CashRegister
      */
-    public string $receiptType;
+    public ReceiptType $receiptType;
 
     /**
      * Dátum a čas vyhotovenia dokladu typu Paragon alebo InvoiceParagon.

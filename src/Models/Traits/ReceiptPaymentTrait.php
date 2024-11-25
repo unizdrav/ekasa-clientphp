@@ -2,14 +2,16 @@
 
 namespace NineDigit\eKasa\Client\Models\Traits;
 
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPaymentName;
+
 trait ReceiptPaymentTrait
 {
     /**
      * Názov platidla v dĺžke 1 až 255 znakov
      * @example Hotovosť
-     * @var string
+     * @var ReceiptPaymentName
      */
-    public string $name;
+    public ReceiptPaymentName $name;
 
     /**
      * Celková suma v EUR.

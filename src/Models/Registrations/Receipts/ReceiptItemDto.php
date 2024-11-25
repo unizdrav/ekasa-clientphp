@@ -5,13 +5,14 @@ namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 use NineDigit\eKasa\Client\Models\QuantityDto;
 use NineDigit\eKasa\Client\Models\SellerDto;
 use NineDigit\eKasa\Client\Models\Traits\ReceiptItemTrait;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptItemType;
 
 final class ReceiptItemDto {
 
     use ReceiptItemTrait;
 
     public function __construct(
-        string $type = ReceiptItemType::POSITIVE,
+        ReceiptItemType $type = ReceiptItemType::POSITIVE,
         string $name = "",
         float $unitPrice = 0,
         ?float $vatRate = 0,

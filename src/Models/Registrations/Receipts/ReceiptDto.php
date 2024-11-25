@@ -7,13 +7,14 @@ namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
  */
 
 use NineDigit\eKasa\Client\Models\Traits\ReceiptTrait;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptType;
 
 final class ReceiptDto extends RegistrationRequestDataDto {
 
     use ReceiptTrait;
 
     public function __construct(
-        string $receiptType = ReceiptType::CASH_REGISTER,
+        ReceiptType $receiptType = ReceiptType::CASH_REGISTER,
         string $cashRegisterCode = "",
         ?array $items = null,
         ?array $payments = null

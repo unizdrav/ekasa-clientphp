@@ -4,6 +4,7 @@ namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 
 use NineDigit\eKasa\Client\Models\QuantityDto;
 use NineDigit\eKasa\Client\Models\SellerDto;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptItemType;
 
 class ReceiptItemBuilder
 {

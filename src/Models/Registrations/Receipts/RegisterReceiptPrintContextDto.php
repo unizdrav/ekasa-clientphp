@@ -4,6 +4,7 @@ namespace NineDigit\eKasa\Client\Models\Registrations\Receipts;
 
 // NOTE: Do not remove this line. Deserialization will fail.
 use Symfony\Component\Serializer\Annotation\DiscriminatorMap;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPrinterName;
 
 /**
  * @DiscriminatorMap(typeProperty="name", mapping={
@@ -18,14 +19,14 @@ abstract class RegisterReceiptPrintContextDto {
      * Dostupné možnosti: pos, pdf, email.
      * @see ReceiptPrinterName
      */
-    public string $printerName;
+    public ReceiptPrinterName $printerName;
 
     /**
      * Nastavenia tlačiarne.
      */
     // public ?ReceiptPrinterOptions $options;
-    
-    public function __construct(?string $printerName/*, ?ReceiptPrinterOptions $options = null*/) {
+
+    public function __construct(?ReceiptPrinterName $printerName/*, ?ReceiptPrinterOptions $options = null*/) {
         $this->printerName = $printerName;
         //$this->options = $options;
     }

@@ -2,7 +2,7 @@
 
 namespace NineDigit\eKasa\Client\Examples;
 
-/*use Error;
+use Error;
 use NineDigit\eKasa\Client\AccessTokenSource;
 use NineDigit\eKasa\Client\ApiClientAuthenticationAccessTokenOptions;
 use NineDigit\eKasa\Client\ApiClientAuthenticationOptions;
@@ -24,9 +24,9 @@ use NineDigit\eKasa\Client\Models\Registrations\Receipts\PosRegisterReceiptPrint
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptBuilder;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemBuilder;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemDto;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemType;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptItemType;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentDto;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentName;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPaymentName;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestContextDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestDto;
 
@@ -38,6 +38,38 @@ $clientOptions = new ApiClientOptions($url);
 $client = new ApiClient($clientOptions);
 
 $cashRegisterCode = "88812345678900001";
+
+$externalId = 1234;
+
+// 2.1. Tlačiareň papierových dokladov
+$posPrinterOptions = new PosReceiptPrinterOptions();
+$posPrinterOptions->openDrawer = true;
+$print = new PosRegisterReceiptPrintContextDto($posPrinterOptions);
+
+// Položky dokladu
+
+$items = array(
+    new ReceiptItemDto(
+        ReceiptItemType::POSITIVE, // Kladný typ položky
+        "Coca Cola 0.25l", // Názov
+        1.29, // Jednotková cena
+        20.00, // Daňová hladina
+        new QuantityDto(2, "ks"), // Množstvo
+        2.58 // Cena
+    )
+);
+
+// Doklad
+$receipt = ReceiptBuilder::cashRegister($cashRegisterCode, $items)
+    ->setRoundingAmount(0.02)
+    ->addPayment(new ReceiptPaymentDto(4.00, ReceiptPaymentName::CASH))
+    ->addPayment(new ReceiptPaymentDto(-0.50, ReceiptPaymentName::EXPENSE))
+    ->setHeaderText("Nine Digit, s.r.o.") // Voliteľná hlavička dokladu
+    ->setFooterText("Ďakujeme za nákup!") // Voliteľná pätička dokladu
+    ->build();
+
+$request = new RegisterReceiptRequestDto($receipt, $externalId);
+$requestContext = new RegisterReceiptRequestContextDto($print, $request);
 
 $receiptCount = $client->getCountReceipts($cashRegisterCode);
 $info = $client->getReceipts(["externalId"=>"e52ff4d1-f2ed-4493-9e9a-a73739b1ba23"]);
@@ -71,4 +103,7 @@ $printUnprocessedReceipt = $client->printUnprocessedReceipt($cashRegisterCode);
 
 $getCountUnprocessedReceipts = $client->getCountUnprocessedReceipts($cashRegisterCode);
 
-var_dump($queue);*/
+// Zaslanie požidavky a obdržanie výsledku
+$result = $client->registerReceipt($requestContext);
+
+var_dump($result);
