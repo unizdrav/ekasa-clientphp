@@ -163,6 +163,19 @@ final class ApiClient {
         return $this->httpClient->receive($apiRequest, ReceiptNextDto::class);
     }
 
+    /**
+     * Vyvolá spracovanie nespracovaných požiadaviek
+     * @param string $cashRegisterCode
+     * @return ApiResponseMessage
+     */
+    public function processUnprocessedReceipt(string $cashRegisterCode): ApiResponseMessage
+    {
+        $apiRequest = ApiRequestBuilder::createPost("/v1/requests/unprocessed/process")
+            ->withQueryString(["cashRegisterCode" => $cashRegisterCode])
+            ->build();
+        return $this->httpClient->receiveRaw($apiRequest);
+    }
+
     // Certificates
 
     /**
@@ -345,6 +358,25 @@ final class ApiClient {
     public function printCopyReceipt(array $query=[]): PrinterPrintResponseDto
     {
         $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts/print_copy")
+            ->withQueryString($query)
+            ->build();
+
+        return $this->httpClient->receive($apiRequest, PrinterPrintResponseDto::class);
+    }
+
+    /**
+     * Vytlačí nespracované požiadavky
+     * @param array $query
+     * @return PrinterPrintResponseDto
+     * @throws Exceptions\ApiAuthenticationException
+     * @throws Exceptions\ExposeException
+     * @throws ProblemDetailsException
+     * @throws ValidationProblemDetailsException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function printUnprocessedReceipt(array $query=[]): PrinterPrintResponseDto
+    {
+        $apiRequest = ApiRequestBuilder::createPost("/v1/requests/unprocessed/print")
             ->withQueryString($query)
             ->build();
 
