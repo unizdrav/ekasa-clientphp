@@ -9,9 +9,9 @@ trait ReceiptPaymentTrait
     /**
      * Názov platidla v dĺžke 1 až 255 znakov
      * @example Hotovosť
-     * @var ReceiptPaymentName
+     * @var string|ReceiptPaymentName
      */
-    public ReceiptPaymentName $name;
+    public string|ReceiptPaymentName $name;
 
     /**
      * Celková suma v EUR.

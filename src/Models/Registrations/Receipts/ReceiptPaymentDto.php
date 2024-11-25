@@ -12,7 +12,7 @@ final class ReceiptPaymentDto {
 
     use ReceiptPaymentTrait;
 
-    public function __construct(float $amount, ReceiptPaymentName $name = ReceiptPaymentName::CASH) {
+    public function __construct(float $amount, string | ReceiptPaymentName $name = ReceiptPaymentName::CASH) {
         $this->amount = $amount;
         $this->name = $name;
     }

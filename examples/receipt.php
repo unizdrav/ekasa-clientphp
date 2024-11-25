@@ -63,7 +63,7 @@ $items = array(
 $receipt = ReceiptBuilder::cashRegister($cashRegisterCode, $items)
     ->setRoundingAmount(0.02)
     ->addPayment(new ReceiptPaymentDto(4.00, ReceiptPaymentName::CASH))
-    ->addPayment(new ReceiptPaymentDto(-0.50, ReceiptPaymentName::EXPENSE))
+    ->addPayment(new ReceiptPaymentDto(-0.50, "Výdavok"))
     ->setHeaderText("Nine Digit, s.r.o.") // Voliteľná hlavička dokladu
     ->setFooterText("Ďakujeme za nákup!") // Voliteľná pätička dokladu
     ->build();
