@@ -3,6 +3,8 @@
 namespace NineDigit\eKasa\Client\Models;
 
 
+use NineDigit\eKasa\Client\Models\Enums\QueueState;
+
 final class QueueDto {
 
     /**
@@ -20,5 +22,5 @@ final class QueueDto {
      */
     public RegisterTokenErrorDto $error;
 
-    public string $state;
+    public QueueState $state;
 }

@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -31,6 +32,7 @@ final class SymfonyJsonSerializer implements SerializerInterface
             // TODO: Add ProblemNormalizer (https://symfony.com/doc/current/components/serializer.html#built-in-normalizers)
             new ArrayDenormalizer(),
             new DateTimeNormalizer(),
+            new BackedEnumNormalizer(),
             new ObjectNormalizer($classMetadataFactory, null, null, $extractor, $discriminator)
         ];
         $this->serializer = new Serializer($normalizers, [

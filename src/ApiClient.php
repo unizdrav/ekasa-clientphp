@@ -25,26 +25,36 @@ use NineDigit\eKasa\Client\Models\ResponseCount;
 use NineDigit\eKasa\Client\Models\StorageReceiptLastDto;
 
 
-final class ApiClient {
-  private HttpClientInterface $httpClient;
+final class ApiClient
+{
+    private HttpClientInterface $httpClient;
 
-  /**
-   * @param $optionsOrClient ApiClientOptions | HttpClientInterface
-   * Akceptuje ApiClientOptions alebo HttpClientInterface.
-   * Preťaženie s HttpClientInterface sa využíva iba na testovacie účely. Využívajte preťaženie
-   * akceptujúce ApiClientOptions.
-   */
-  public function __construct($optionsOrClient) {
-    if ($optionsOrClient instanceof ApiClientOptions) {
-      $this->httpClient = new HttpClient($optionsOrClient);
-    } else if (is_subclass_of($optionsOrClient, HttpClientInterface::class)) {
-      $this->httpClient = $optionsOrClient;
-    } else {
-      throw new InvalidArgumentException("Expecting ". ApiClientOptions::class ." or ". HttpClientInterface::class . " type as an argument.");
+    private ?string $cashRegisterCode;
+
+    /**
+     * @param $optionsOrClient ApiClientOptions | HttpClientInterface
+     * Akceptuje ApiClientOptions alebo HttpClientInterface.
+     * Preťaženie s HttpClientInterface sa využíva iba na testovacie účely. Využívajte preťaženie
+     * akceptujúce ApiClientOptions.
+     */
+    public function __construct($optionsOrClient)
+    {
+        if ($optionsOrClient instanceof ApiClientOptions) {
+            $this->httpClient = new HttpClient($optionsOrClient);
+        } else if (is_subclass_of($optionsOrClient, HttpClientInterface::class)) {
+            $this->httpClient = $optionsOrClient;
+        } else {
+            throw new InvalidArgumentException("Expecting " . ApiClientOptions::class . " or " . HttpClientInterface::class . " type as an argument.");
+        }
     }
-  }
 
-  // Connectivity
+    public function setCashRegisterCode(string $cashRegisterCode): self
+    {
+        $this->cashRegisterCode = $cashRegisterCode;
+        return $this;
+    }
+
+    // Connectivity
 
     /**
      * Ziska informacie o stavu servera
@@ -69,33 +79,35 @@ final class ApiClient {
         return $this->httpClient->receive($apiRequest, IndexTableStatusDto::class);
     }
 
-  // Product
+    // Product
 
-  /**
-   * Získanie informácii o pokladničnom programe a aktuálne pripojenom chránenom dátovom úložisku.
-   */
-  public function getProductInfo(): EKasaProductInfoDto {
-    $apiRequest = ApiRequestBuilder::createGet("/v1/product/info")->build();
-    return $this->httpClient->receive($apiRequest, EKasaProductInfoDto::class);
-  }
+    /**
+     * Získanie informácii o pokladničnom programe a aktuálne pripojenom chránenom dátovom úložisku.
+     */
+    public function getProductInfo(): EKasaProductInfoDto
+    {
+        $apiRequest = ApiRequestBuilder::createGet("/v1/product/info")->build();
+        return $this->httpClient->receive($apiRequest, EKasaProductInfoDto::class);
+    }
 
-  // Registrations
+    // Registrations
 
-  /**
-   * Zadá požiadavku na zaregistrovanie dokladu.
-   * @throws ValidationProblemDetailsException ak nie je požiadavka valídna
-   * @throws ProblemDetailsException
-   * @throws ExposeException
-   * @throws ApiAuthenticationException
-   * @throws Exception
-   */
-  public function registerReceipt(RegisterReceiptRequestContextDto $context): RegisterReceiptResultDto {
-    $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts")
-      ->withPayload($context)
-      ->build();
+    /**
+     * Zadá požiadavku na zaregistrovanie dokladu.
+     * @throws ValidationProblemDetailsException ak nie je požiadavka valídna
+     * @throws ProblemDetailsException
+     * @throws ExposeException
+     * @throws ApiAuthenticationException
+     * @throws Exception
+     */
+    public function registerReceipt(RegisterReceiptRequestContextDto $context): RegisterReceiptResultDto
+    {
+        $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts")
+            ->withPayload($context)
+            ->build();
 
-    return $this->httpClient->receive($apiRequest, RegisterReceiptResultDto::class);
-  }
+        return $this->httpClient->receive($apiRequest, RegisterReceiptResultDto::class);
+    }
 
     /**
      * Zadá požiadavku na ziskanie dokladov.
@@ -107,11 +119,12 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getReceipts(array $query = []): ?array {
+    public function getReceipts(array $query = []): ?array
+    {
         $apiRequest = ApiRequestBuilder::createGet("/v1/requests/receipts")
             ->withQueryString($query)
             ->build();
-        return $this->httpClient->receive($apiRequest, ReceiptsRequestDto::class."[]");
+        return $this->httpClient->receive($apiRequest, ReceiptsRequestDto::class . "[]");
     }
 
     /**
@@ -120,8 +133,10 @@ final class ApiClient {
      * @return ResponseCount
      * @throws \Exception
      */
-    public function getCountReceipts(array $query): ResponseCount
+    public function getCountReceipts(string $cashRegisterCode, array $query = []): ResponseCount
     {
+        $query["cashRegisterCode"] = $cashRegisterCode;
+
         $apiRequest = ApiRequestBuilder::createHead("/v1/requests/receipts")
             ->withQueryString($query)
             ->build();
@@ -138,7 +153,9 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getReceipt(array $query = []): ReceiptsRequestDto {
+    public function getReceipt(string $cashRegisterCode, array $query = []): ReceiptsRequestDto
+    {
+        $query["cashRegisterCode"] = $cashRegisterCode;
         $apiRequest = ApiRequestBuilder::createGet("/v1/requests/receipts/receipt")
             ->withQueryString($query)
             ->build();
@@ -191,7 +208,7 @@ final class ApiClient {
     {
         $apiRequest = ApiRequestBuilder::createGet("/v1/certificates")
             ->build();
-        return $this->httpClient->receive($apiRequest, CertificateInfoDto::class."[]");
+        return $this->httpClient->receive($apiRequest, CertificateInfoDto::class . "[]");
     }
 
     /**
@@ -242,13 +259,31 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUnprocessedReceipts(array $query = []): array
+    public function getUnprocessedReceipts(string $cashRegisterCode, array $query = []): array
     {
+        $query["cashRegisterCode"] = $cashRegisterCode;
+
         $apiRequest = ApiRequestBuilder::createGet("/v1/queue/items/unprocessed")
             ->withQueryString($query)
             ->build();
 
-        return $this->httpClient->receive($apiRequest, QueueDto::class."[]");
+        return $this->httpClient->receive($apiRequest, QueueDto::class . "[]");
+    }
+
+    /**
+     * Vrati pocet nespracovanych dokladov
+     * @param array $query
+     * @return ResponseCount
+     * @throws \Exception
+     */
+    public function getCountUnprocessedReceipts(string $cashRegisterCode, array $query = []): ResponseCount
+    {
+        $query["cashRegisterCode"] = $cashRegisterCode;
+        $apiRequest = ApiRequestBuilder::createHead("/v1/queue/items/unprocessed")
+            ->withQueryString($query)
+            ->build();
+
+        return $this->httpClient->receiveCountItem($apiRequest);
     }
 
     //Storage
@@ -263,10 +298,10 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getStorageReceiptLastNumber(array $query = []): StorageReceiptLastDto
+    public function getStorageReceiptLastNumber(string $cashRegisterCode): StorageReceiptLastDto
     {
         $apiRequest = ApiRequestBuilder::createGet("/v1/storage/last_receipt_number")
-            ->withQueryString($query)
+            ->withQueryString(["cashRegisterCode" => $cashRegisterCode])
             ->build();
 
         return $this->httpClient->receive($apiRequest, StorageReceiptLastDto::class);
@@ -316,8 +351,9 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function openDrawer(PrinterOpenDrawerRequestContextDto $context,array $query = []): PrinterOpenDrawerResponseDto
+    public function openDrawer(PrinterOpenDrawerRequestContextDto $context, string $cashRegisterCode, array $query = []): PrinterOpenDrawerResponseDto
     {
+        $query["cashRegisterCode"] = $cashRegisterCode;
         $apiRequest = ApiRequestBuilder::createPost("/v1/printers/open_drawer")
             ->withQueryString($query)
             ->withPayload($context)
@@ -355,8 +391,10 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function printCopyReceipt(array $query=[]): PrinterPrintResponseDto
+    public function printCopyReceipt(string $cashRegisterCode, array $query = []): PrinterPrintResponseDto
     {
+        $query["cashRegisterCode"] = $cashRegisterCode;
+
         $apiRequest = ApiRequestBuilder::createPost("/v1/requests/receipts/print_copy")
             ->withQueryString($query)
             ->build();
@@ -374,8 +412,9 @@ final class ApiClient {
      * @throws ValidationProblemDetailsException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function printUnprocessedReceipt(array $query=[]): PrinterPrintResponseDto
+    public function printUnprocessedReceipt(string $cashRegisterCode, array $query = []): PrinterPrintResponseDto
     {
+        $query["cashRegisterCode"] = $cashRegisterCode;
         $apiRequest = ApiRequestBuilder::createPost("/v1/requests/unprocessed/print")
             ->withQueryString($query)
             ->build();
@@ -399,7 +438,7 @@ final class ApiClient {
         $apiRequest = ApiRequestBuilder::createGet("/v1/identities")
             ->build();
 
-        return $this->httpClient->receive($apiRequest, IdentityDto::class."[]");
+        return $this->httpClient->receive($apiRequest, IdentityDto::class . "[]");
     }
 
 }

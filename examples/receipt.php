@@ -11,6 +11,7 @@ use NineDigit\eKasa\Client\EKasaServer;
 use NineDigit\eKasa\Client\ApiClient;
 use NineDigit\eKasa\Client\ApiClientOptions;
 use NineDigit\eKasa\Client\Exceptions\ProblemDetailsException;
+use NineDigit\eKasa\Client\Models\Enums\PrinterDrawerPin;
 use NineDigit\eKasa\Client\Models\PrinterOpenDrawerRequestContextDto;
 use NineDigit\eKasa\Client\Models\PrinterPrintRequestContextDto;
 use NineDigit\eKasa\Client\Models\QuantityDto;
@@ -38,19 +39,19 @@ $client = new ApiClient($clientOptions);
 
 $cashRegisterCode = "88812345678900001";
 
-$receiptCount = $client->getCountReceipts(["cashRegisterCode"=>$cashRegisterCode]);
+$receiptCount = $client->getCountReceipts($cashRegisterCode);
 $info = $client->getReceipts(["externalId"=>"e52ff4d1-f2ed-4493-9e9a-a73739b1ba23"]);
 $receiptNext = $client->getReceiptNextNumber($cashRegisterCode);
 
-$receipt = $client->getReceipt(["cashRegisterCode"=>$cashRegisterCode,"id"=>"b1e7c47e-3a2d-4731-9a41-9daaee859974"]);
+$receipt = $client->getReceipt($cashRegisterCode,["id"=>"b1e7c47e-3a2d-4731-9a41-9daaee859974"]);
 
 $certificates = $client->getCertificates();
 $certificateLastValidInfo = $client->getLatestValidCertificate($cashRegisterCode);
 $certificateLastInfo = $client->getLatestCertificate($cashRegisterCode);
 
-$queue = $client->getUnprocessedReceipts(["cashRegisterCode"=>$cashRegisterCode]);
+$queue = $client->getUnprocessedReceipts($cashRegisterCode);
 
-$lastStorage = $client->getStorageReceiptLastNumber(["cashRegisterCode"=>$cashRegisterCode]);
+$lastStorage = $client->getStorageReceiptLastNumber($cashRegisterCode);
 
 $printerStatus = $client->getPrinterStatus();
 //$printPdf = $client->getPdfStream(["cashRegisterCode"=>$cashRegisterCode,"id"=>"b1e7c47e-3a2d-4731-9a41-9daaee859974"]);
@@ -58,14 +59,16 @@ $printerStatus = $client->getPrinterStatus();
 $connectivity = $client->getConnectivity();
 $indexTable = $client->getIndexTable();
 
-$openDrawer = $client->openDrawer(new PrinterOpenDrawerRequestContextDto("Pin2"), ["cashRegisterCode"=>$cashRegisterCode]);
+$openDrawer = $client->openDrawer(new PrinterOpenDrawerRequestContextDto(PrinterDrawerPin::Pin2), $cashRegisterCode);
 $print = $client->print(new PrinterPrintRequestContextDto("This is the content of non-fiscal print output. Please see formatting options in the documentation.",$cashRegisterCode));
-$printCopy = $client->printCopyReceipt(["cashRegisterCode"=>$cashRegisterCode,"id"=>"b1e7c47e-3a2d-4731-9a41-9daaee859974"]);
+$printCopy = $client->printCopyReceipt($cashRegisterCode,["id"=>"b1e7c47e-3a2d-4731-9a41-9daaee859974"]);
 
 $identites = $client->getIdentities();
 
 $proccess = $client->processUnprocessedReceipt($cashRegisterCode);
 
-$printUnprocessedReceipt = $client->printUnprocessedReceipt(["cashRegisterCode"=>$cashRegisterCode]);
+$printUnprocessedReceipt = $client->printUnprocessedReceipt($cashRegisterCode);
 
-var_dump($printUnprocessedReceipt);*/
+$getCountUnprocessedReceipts = $client->getCountUnprocessedReceipts($cashRegisterCode);
+
+var_dump($queue);*/
