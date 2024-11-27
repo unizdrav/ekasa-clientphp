@@ -137,6 +137,116 @@ $requestContext = new RegisterReceiptRequestContextDto($print, $request);
 $result = $client->registerReceipt($requestContext);
 ```
 
+### Príklad ziskania stavu servera
+```php
+$result = $client->getConnectivity();
+```
+
+### Príklad získanie stavu tabuľky indexov.
+```php
+$result = $client->getIndexTable();
+```
+
+### Príklad získanie informácii o pokladničnom programe a aktuálne pripojenom chránenom dátovom úložisku.
+```php
+$result = $client->getProductInfo();
+```
+
+### Príklad získanie informácií o pokladničnom programe.
+```php
+$result = $client->getSoftwareInfo();
+```
+
+### Príklad zadania požiadavky na ziskanie dokladov. Prijma $query parameter, ktory je associatívne pole
+```php
+$result = $client->getReceipts();
+```
+
+### Príklad pre získanie počtu dokladov
+```php
+$result = $client->getCountReceipts();
+```
+
+### Príklad pre získanie konkretného dokladu
+```php
+$result = $client->getReceipt($cashRegisterCode);
+```
+
+### Príklad pre získanie cisla dalsieho dokladu
+```php
+$result = $client->getReceiptNextNumber($cashRegisterCode);
+```
+
+### Príklad pre spracovanie nespracovaných požiadaviek
+```php
+$result = $client->processUnprocessedReceipt($cashRegisterCode);
+```
+
+### Príklad pre vypísanie vsetkych certifikatov
+```php
+$result = $client->getCertificates();
+```
+
+### Príklad pre vypisanie posledného platného certifikatu
+```php
+$result = $client->getLatestValidCertificate($cashRegisterCode);
+```
+
+### Príklad pre vypisanie posledného certifikatu
+```php
+$result = $client->getLatestCertificate($cashRegisterCode);
+```
+
+### Príklad pre vsetky nespracovane doklady
+```php
+$result = $client->getUnprocessedReceipts($cashRegisterCode);
+```
+
+### Príklad pre pocet nespracovanych dokladov
+```php
+$result = $client->getCountUnprocessedReceipts($cashRegisterCode);
+```
+
+### Príklad pre posledne poradove cislo v ulozisku
+```php
+$result = $client->getStorageReceiptLastNumber($cashRegisterCode);
+```
+
+### Príklad pre stav tlaciarne
+```php
+$result = $client->getPrinterStatus();
+```
+
+### Príklad pre pdf stream pre doklad
+```php
+$result = $client->getPdfStream();
+```
+
+### Príklad pre otvorenie penažnej zásuvky
+```php
+$result = $client->openDrawer();
+```
+
+### Príklad pre vytlačenie nefiškálneho dokladu
+```php
+$result = $client->print(new PrinterPrintRequestContextDto("Content",$cashRegisterCode));
+```
+
+### Príklad pre tlač dokladov
+```php
+$result = $client->printCopyReceipt($cashRegisterCode);
+```
+
+### Príklad pre tlač nespracovaných dokladov
+```php
+$result = $client->printUnprocessedReceipt($cashRegisterCode);
+```
+
+### Príklad pre vratenie všetkých identít
+```php
+$result = $client->getIdentities();
+```
+
 ### Zaokrúhľovanie
 
 V prípade, ak do premenných vkladáte výsledky matematických operácii, pred priradením je vhodné premenné zaokrúhliť.

@@ -5,6 +5,7 @@ namespace NineDigit\eKasa\Client\Tests\Integration;
 use Error;
 use Exception;
 use JsonException;
+use NineDigit\eKasa\Client\Models\EKasaSoftwareInfoDto;
 use NineDigit\eKasa\Client\Models\Enums\PrinterDrawerPin;
 use NineDigit\eKasa\Client\Models\PrinterOpenDrawerRequestContextDto;
 use NineDigit\eKasa\Client\Models\PrinterPrintRequestContextDto;
@@ -59,6 +60,24 @@ final class ApiClientIntegrationTest extends TestCase {
         try
         {
             $result = $apiClient->getProductInfo();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetSoftwareInfo() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+        $result = null;
+
+        try
+        {
+            $result = $apiClient->getSoftwareInfo();
         }
         catch (Exception | Error $e)
         {

@@ -8,6 +8,7 @@ use NineDigit\eKasa\Client\Exceptions\ValidationProblemDetailsException;
 use NineDigit\eKasa\Client\Models\CertificateInfoDto;
 use NineDigit\eKasa\Client\Models\ConnectivityStatusDto;
 use NineDigit\eKasa\Client\Models\EKasaProductInfoDto;
+use NineDigit\eKasa\Client\Models\EKasaSoftwareInfoDto;
 use NineDigit\eKasa\Client\Models\IdentityDto;
 use NineDigit\eKasa\Client\Models\IndexTableStatusDto;
 use NineDigit\eKasa\Client\Models\PrinterOpenDrawerRequestContextDto;
@@ -90,6 +91,15 @@ final class ApiClient
         return $this->httpClient->receive($apiRequest, EKasaProductInfoDto::class);
     }
 
+    /**
+     * Získa informácie o pokladničnom programe.
+     */
+    public function getSoftwareInfo(): EKasaSoftwareInfoDto
+    {
+        $apiRequest = ApiRequestBuilder::createGet("/v1/product/info/ppekk")->build();
+        return $this->httpClient->receive($apiRequest, EKasaSoftwareInfoDto::class);
+    }
+
     // Registrations
 
     /**
@@ -133,10 +143,8 @@ final class ApiClient
      * @return ResponseCount
      * @throws \Exception
      */
-    public function getCountReceipts(string $cashRegisterCode, array $query = []): ResponseCount
+    public function getCountReceipts(array $query = []): ResponseCount
     {
-        $query["cashRegisterCode"] = $cashRegisterCode;
-
         $apiRequest = ApiRequestBuilder::createHead("/v1/requests/receipts")
             ->withQueryString($query)
             ->build();
