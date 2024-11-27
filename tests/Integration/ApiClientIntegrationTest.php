@@ -5,13 +5,17 @@ namespace NineDigit\eKasa\Client\Tests\Integration;
 use Error;
 use Exception;
 use JsonException;
+use NineDigit\eKasa\Client\Models\Enums\PrinterDrawerPin;
+use NineDigit\eKasa\Client\Models\PrinterOpenDrawerRequestContextDto;
+use NineDigit\eKasa\Client\Models\PrinterPrintRequestContextDto;
+use NineDigit\eKasa\Client\Models\ResponseCount;
 use PHPUnit\Framework\TestCase;
 
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\PosRegisterReceiptPrintContextDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptBuilder;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemBuilder;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentDto;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentName;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPaymentName;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestContextDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestDto;
 use NineDigit\eKasa\Client\ApiClient;
@@ -55,7 +59,6 @@ final class ApiClientIntegrationTest extends TestCase {
         try
         {
             $result = $apiClient->getProductInfo();
-            var_dump($result);
         }
         catch (Exception | Error $e)
         {
@@ -101,6 +104,255 @@ final class ApiClientIntegrationTest extends TestCase {
         }
 
         $this->assertFalse($throws);
+    }
+
+    public function testGetCertificates() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getCertificates();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetLatestValidCertificate() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getLatestValidCertificate($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetLatestCertificate() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getLatestCertificate($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetUnprocessedReceipts() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getUnprocessedReceipts($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetStorageReceiptLastNumber() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getStorageReceiptLastNumber($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetPrinterStatus() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getPrinterStatus();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetConnectivity() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getConnectivity();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetIndexTable() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getIndexTable();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testOpenDrawer() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+        $cashRegisterCode = "88812345678900001";
+
+        try
+        {
+            $result = $apiClient->openDrawer(new PrinterOpenDrawerRequestContextDto(PrinterDrawerPin::Pin2), $cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testPrint() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+        $cashRegisterCode = "88812345678900001";
+
+        try
+        {
+            $result = $apiClient->print(new PrinterPrintRequestContextDto("Content",$cashRegisterCode));
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetIdentities() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->getIdentities();
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testProcessUnprocessedReceipt() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->processUnprocessedReceipt($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testPrintUnprocessedReceipt() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+
+        try
+        {
+            $result = $apiClient->printUnprocessedReceipt($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+    }
+
+    public function testGetCountUnprocessedReceipts() {
+        $settings = $this->getSettings();
+        $apiClient = new ApiClient($settings->apiClientOptions);
+        $cashRegisterCode = "88812345678900001";
+        $throws = false;
+        $result = null;
+
+        try
+        {
+            $result = $apiClient->getCountUnprocessedReceipts($cashRegisterCode);
+        }
+        catch (Exception | Error $e)
+        {
+            $throws = true;
+        }
+
+        $this->assertFalse($throws);
+        $this->assertInstanceOf(ResponseCount::class,$result);
     }
 
 //    public function testRegisterReceiptUsingPosPrinterWithNonEmptyOptions() {

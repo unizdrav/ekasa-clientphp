@@ -12,9 +12,9 @@ use NineDigit\eKasa\Client\Models\Registrations\Receipts\PosReceiptPrinterOption
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\PosRegisterReceiptPrintContextDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemDto;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptItemType;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptItemType;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentDto;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptPaymentName;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptPaymentName;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptRegistrationDataDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptRegistrationResultReceiptDataDto;
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptRequestContextDto;
@@ -24,7 +24,7 @@ use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptResultRe
 use NineDigit\eKasa\Client\Models\Registrations\Receipts\RegisterReceiptResultResponseDto;
 use NineDigit\eKasa\Client\Models\TaxFreeReason;
 use PHPUnit\Framework\TestCase;
-use NineDigit\eKasa\Client\Models\Registrations\Receipts\ReceiptType;
+use NineDigit\eKasa\Client\Models\Enums\ReceiptType;
 use NineDigit\eKasa\Client\Models\SellerDto;
 use NineDigit\eKasa\Client\Models\SellerIdType;
 use NineDigit\eKasa\Client\ApiErrorCode;
@@ -69,13 +69,12 @@ final class SymfonyJsonSerializerTest extends TestCase
         $receipt->payments = array(
             new ReceiptPaymentDto(3.50, ReceiptPaymentName::CASH)
         );
-
         $json = $serializer->serialize($receipt);
         $data = json_decode($json, true);
 
         $this->assertIsArray($data);
 
-        $this->assertEquals(ReceiptType::CASH_REGISTER, $data["receiptType"]);
+        $this->assertEquals(ReceiptType::CASH_REGISTER->value, $data["receiptType"]);
         $this->assertEquals("2023-09-11T18:14:11+02:00", $data["issueDate"]);
         $this->assertEquals("201801001", $data["invoiceNumber"]);
         $this->assertEquals(429, $data["paragonNumber"]);
@@ -84,7 +83,7 @@ final class SymfonyJsonSerializerTest extends TestCase
         $this->assertEquals(1, count($data["items"]));
 
         $this->assertIsArray($data["items"][0]);
-        $this->assertEquals(ReceiptItemType::POSITIVE, $data["items"][0]["type"]);
+        $this->assertEquals(ReceiptItemType::POSITIVE->value, $data["items"][0]["type"]);
         $this->assertEquals("Coca Cola 0.25l", $data["items"][0]["name"]);
         $this->assertEquals(2.58, $data["items"][0]["price"]);
         $this->assertEquals(1.29, $data["items"][0]["unitPrice"]);
@@ -108,7 +107,7 @@ final class SymfonyJsonSerializerTest extends TestCase
         $this->assertEquals(1, count($data["payments"]));
 
         $this->assertIsArray($data["payments"][0]);
-        $this->assertEquals(ReceiptPaymentName::CASH, $data["payments"][0]["name"]);
+        $this->assertEquals(ReceiptPaymentName::CASH->value, $data["payments"][0]["name"]);
         $this->assertEquals(3.5, $data["payments"][0]["amount"]);
 
         $this->assertEquals(3.5, $data["amount"]);
@@ -287,7 +286,7 @@ final class SymfonyJsonSerializerTest extends TestCase
         $this->assertInstanceOf(RegisterReceiptResultRequestDto::class, $result->request);
         $this->assertInstanceOf(ReceiptRegistrationDataDto::class, $result->request->data);
 
-        $this->assertEquals(ReceiptType::CASH_REGISTER, $result->request->data->receiptType);
+        $this->assertEquals(ReceiptType::CASH_REGISTER->value, $result->request->data->receiptType);
         $this->assertEquals(3.50, $result->request->data->amount);
         $this->assertEquals(0.02, $result->request->data->roundingAmount);
         $this->assertEquals(DateTimeHelper::createEuropeBratislava(2023, 9, 11, 18, 14, 11), $result->request->data->issueDate);
